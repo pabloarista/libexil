@@ -26,7 +26,7 @@
 */
 
 #include "Exil.h"
-#include "StringConverter.h"
+#include "ExilStringConverter.h"
 #include <locale>
 
 namespace Exil

@@ -184,15 +184,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\source\exil\Document.cpp"
+				RelativePath="..\source\exil\Exil.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\source\exil\Element.cpp"
+				RelativePath="..\source\exil\ExilDocument.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\source\exil\StringConverter.cpp"
+				RelativePath="..\source\exil\ExilElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\source\exil\ExilStringConverter.cpp"
 				>
 			</File>
 			<File
@@ -214,27 +218,27 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\include\Document.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Element.h"
-				>
-			</File>
-			<File
 				RelativePath="..\include\Exil.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\StringConverter.h"
+				RelativePath="..\include\ExilDocument.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\ExilElement.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\ExilSerializable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\ExilStringConverter.h"
 				>
 			</File>
 			<File
 				RelativePath="..\include\tinyxml.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\XmlSerializable.h"
 				>
 			</File>
 		</Filter>

@@ -30,7 +30,7 @@
 #pragma once
 
 #include "Exil.h"
-#include "StringConverter.h"
+#include "ExilStringConverter.h"
 
 namespace Exil
 {
@@ -119,7 +119,7 @@ namespace Exil
 	template <typename TType>
 	ResultCode Element::getChildElement(const String& name, TType& obj) const
 	{
-		String type = TType::XMLSERIALIZABLE_TYPE;
+		String type = TType::EXIL_SERIALIZABLE_TYPE;
 
 		for(Element el = getFirstChild(); el.isValid(); el = el.getNextSibling())
 		{

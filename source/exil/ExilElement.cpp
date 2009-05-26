@@ -26,7 +26,7 @@
 */
 
 #include "Exil.h"
-#include "Element.h"
+#include "ExilElement.h"
 #include "tinyxml.h"
 
 namespace Exil
@@ -255,7 +255,7 @@ namespace Exil
 	//--------
 	std::ostream& operator<<(std::ostream& os, const Element& el)
 	{
-		os << el.mElement;
+		os << *(el.mElement);
 		return os;
 	}
 

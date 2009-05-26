@@ -25,41 +25,33 @@
 	THE SOFTWARE.
 */
 
-#ifndef _EXIL_DOCUMENT_H_
-#define _EXIL_DOCUMENT_H_
+#ifndef _EXIL_SERIALIZABLE_H_
+#define _EXIL_SERIALIZABLE_H_
 #pragma once
 
 #include "Exil.h"
 
 namespace Exil
 {
-
-	///
-	/// @class Document
-	class EXIL_API Document
+	/// Interface for serializing to XML.
+	/// @class Serializable
+	/// Must also implement:
+	///		The name of the class, used for deserialization detection
+	///			public static const String EXIL_SERIALIZABLE_TYPE = "ClassName";
+	class Serializable
 	{
 	public:
-		Document();
-		Document(const String& filename);
-		~Document();
-		Element getFirstChild();
-		void addChild(Element el);
-		void print();
-		void save(const String& filename = BLANK_STRING);
-
-	private:
-		TiXmlDocument* mDoc;
-		String mFilename;
-
-		friend std::ostream EXIL_API &operator<<(std::ostream& os, const Document& doc);
+		Serializable() {}
+		virtual ~Serializable() {}
+		
+		/// Passes parent node to which data is serialized.
+		virtual Element serialize(const String& name) = 0;
+		
+		/// Passes parent node from which data is deserialized.
+		/// @remark Why is element not passed as a reference?
+		virtual ResultCode deserialize(Element element) = 0;
 	};
-
-	/// Output function for Document objects.
-	/// @param os The stream to which the Document is to be written
-	/// @param doc The document object being written
-	/// @return A reference to the stream being passed in
-	std::ostream EXIL_API &operator<<(std::ostream& os, const Document& doc);
 
 };//namespace Exil
 
-#endif//_EXIL_DOCUMENT_H_
+#endif//_EXIL_SERIALIZABLE_H_
