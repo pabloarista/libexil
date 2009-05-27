@@ -25,9 +25,9 @@
 	THE SOFTWARE.
 */
 
-#include "Exil.h"
-#include "ExilDocument.h"
-#include "ExilElement.h"
+#include <Exil/Exil.h>
+#include <Exil/ExilDocument.h>
+#include <Exil/ExilElement.h>
 #include "tinyxml.h"
 
 namespace Exil

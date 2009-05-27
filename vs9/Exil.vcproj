@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\source\exil\tinyxml.h"
+				>
+			</File>
+			<File
 				RelativePath="..\source\exil\tinyxmlerror.cpp"
 				>
 			</File>
@@ -218,27 +222,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\include\Exil.h"
+				RelativePath="..\include\Exil\Exil.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ExilDocument.h"
+				RelativePath="..\include\Exil\ExilDocument.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ExilElement.h"
+				RelativePath="..\include\Exil\ExilElement.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ExilSerializable.h"
+				RelativePath="..\include\Exil\ExilSerializable.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ExilStringConverter.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\tinyxml.h"
+				RelativePath="..\include\Exil\ExilStringConverter.h"
 				>
 			</File>
 		</Filter>

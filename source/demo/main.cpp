@@ -1,7 +1,7 @@
-#include "Exil.h"
-#include "ExilDocument.h"
-#include "ExilElement.h"
-#include "ExilSerializable.h"
+#include <Exil/Exil.h>
+#include <Exil/ExilDocument.h>
+#include <Exil/ExilElement.h>
+#include <Exil/ExilSerializable.h>
 
 #include <iostream>
 
@@ -91,8 +91,18 @@ int main()
 		obj1.getAttribute("isBoolean", isBoolean, false);
 		obj1.getAttribute("pi", pi, 1.0);
 		Person person2;
+		Person person3;
 		root.getChildElement("person1", person2);
+		Exil::Element elPerson2 = root.getChildElement("person1");
+/*		Exil::Element elPerson3 = elPerson2.getNextSibling();
 
+		for(Exil::Element child = root.getChildElement("person1");
+			!child.isValid();
+			child = child.getNextSibling())
+		{
+			// do something
+		}
+*/
 		std::cout
 			<< "x = " << x << std::endl
 			<< "anInt = " << anInt << std::endl

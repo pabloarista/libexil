@@ -25,8 +25,8 @@
 	THE SOFTWARE.
 */
 
-#include "Exil.h"
-#include "ExilStringConverter.h"
+#include <Exil/Exil.h>
+#include <Exil/ExilStringConverter.h>
 #include <locale>
 
 namespace Exil
