@@ -91,6 +91,15 @@ namespace Exil
 	}
 
 	//--------
+	void Document::load(const String& filename)
+	{
+		if(filename.empty())
+			mDoc->LoadFile(filename);
+		else
+			mDoc->LoadFile();
+	}
+
+	//--------
 	std::ostream& operator<<(std::ostream& os, const Document& doc)
 	{
 		os << *(doc.mDoc);

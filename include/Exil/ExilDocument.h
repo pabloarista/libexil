@@ -46,6 +46,7 @@ namespace Exil
 		void addChild(Element el);
 		void print();
 		void save(const String& filename = BLANK_STRING);
+		void load(const String& filename = BLANK_STRING);
 
 	private:
 		TiXmlDocument* mDoc;
