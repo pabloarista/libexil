@@ -88,6 +88,15 @@ namespace Exil
 	}
 
 	//--------
+	Element Element::getFirstChild(const String& type) const
+	{
+		if(mElement)
+			return Element(mElement->FirstChildElement(type));
+
+		return Element(NULL);
+	}
+
+	//--------
 	String Element::getType() const
 	{
 		if(!mElement)
@@ -255,7 +264,10 @@ namespace Exil
 	//--------
 	std::ostream& operator<<(std::ostream& os, const Element& el)
 	{
-		os << *(el.mElement);
+		if(el.mElement)
+			os << *(el.mElement);
+		else
+			os << "Element not initialized." << std::endl;
 		return os;
 	}
 

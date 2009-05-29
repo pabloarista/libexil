@@ -43,7 +43,7 @@ namespace Exil
 	Document::Document(const String& filename)
 		: mFilename(filename)
 	{
-		mDoc = new TiXmlDocument(filename);
+		mDoc = new TiXmlDocument;
 	}
 
 	//--------
@@ -74,6 +74,8 @@ namespace Exil
 	{
 		if(mDoc)
 			mDoc->Print();
+		else
+			std::cout << "No Document loaded" << std::endl;
 	}
 
 	//--------
@@ -86,23 +88,44 @@ namespace Exil
 			else if(!mFilename.empty())
 				mDoc->SaveFile(mFilename);
 			else
-				throw "Could not save document. No filename specified.";
+				throw __LOC__ "Could not save document. No filename specified.";
 		}
 	}
 
 	//--------
 	void Document::load(const String& filename)
 	{
-		if(filename.empty())
+		if(!filename.empty())
+		{
+			mFilename = filename;
 			mDoc->LoadFile(filename);
+		}
+		else if(!mFilename.empty())
+		{
+			mDoc->LoadFile(mFilename);
+		}
 		else
-			mDoc->LoadFile();
+		{
+			throw __LOC__ "Could not load. No filename specified";
+		}
+
+		if(mDoc->Error())
+		{
+			std::stringstream ss;
+			ss << "XML Error: " << mDoc->ErrorDesc() << " @R:" << mDoc->ErrorRow() << " C:" << mDoc->ErrorCol();
+			std::cout << ss.str() << std::endl;
+			throw ss.str();
+		}
 	}
 
 	//--------
 	std::ostream& operator<<(std::ostream& os, const Document& doc)
 	{
-		os << *(doc.mDoc);
+		if(doc.mDoc)
+			os << *(doc.mDoc);
+		else
+			os << "Document not initialized" << std::endl;
+
 		return os;
 	}
 

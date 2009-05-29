@@ -113,6 +113,24 @@ int main()
 
 	std::cin.get();
 
+	Exil::Document doc2;
+	doc2.load("d:/pathways/media/Avatar.xml");
+
+	std::cout << "AVATAR.XML" << std::endl;
+	doc2.print();
+
+	Exil::Element root2 = doc2.getFirstChild();
+	Exil::Element bodiesElement = root2.getFirstChild("Bodies");
+	std::cout << root2.getType() << std::endl;
+
+	if(!bodiesElement.isValid())
+		std::cout << "<Bodies> is not valid" << std::endl;
+
+	Exil::Element bodyElement = bodiesElement.getFirstChild();
+	std::cout << "First body is named: " << bodyElement.getName() << std::endl;
+
+	std::cin.get();
+
 	return 0;
 }
 

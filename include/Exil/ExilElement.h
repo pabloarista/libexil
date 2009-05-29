@@ -54,6 +54,8 @@ namespace Exil
 
 		Element getFirstChild() const;
 
+		Element getFirstChild(const String& type) const;
+
 		String getType() const;
 
 		String getName() const;
