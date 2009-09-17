@@ -6,9 +6,12 @@
 
 namespace Exil
 {
-	struct Object : public Value
+	class Object : public Value
 	{
+	public:
 		Object();
+
+		~Object();
 	
 		void addValue(const String& name, Value* value);
 	

@@ -6,10 +6,12 @@
 
 namespace Exil
 {
-	struct Array : public Value
+	class Array : public Value
 	{
+	public:
 		Array();
-	
+		~Array();
+
 		void addValue(Value* value);
 	
 		template <typename T>

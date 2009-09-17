@@ -1,10 +1,21 @@
 #include <ExilArray.h>
+#include <ExilObject.h>
 
 namespace Exil
 {
 	Array::Array()
 	{
 		type = Types::Array;
+	}
+
+	Array::~Array()
+	{
+		for(ValueList::iterator iter = values.begin();
+			iter != values.end();
+			++iter)
+		{
+			delete *iter;
+		}
 	}
 
 	void Array::addValue( Value* value )

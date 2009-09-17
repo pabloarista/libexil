@@ -5,8 +5,9 @@
 
 namespace Exil
 {
-	struct Value
+	class Value
 	{
+	public:
 		Value(float num);
 	
 		Value(int num);
@@ -15,7 +16,9 @@ namespace Exil
 	
 		Value(bool val);
 	
-		Value();	
+		Value();
+
+		virtual ~Value();
 	
 		struct Types
 		{
@@ -126,5 +129,11 @@ namespace Exil
 
 	std::ostream& operator<< (std::ostream& os, Value* val);
 
-}
+	namespace Convert
+	{
+		String toString(Value::Type type);
+	}
+
+};//namespace Exil
+
 #endif // ExilValue_h__

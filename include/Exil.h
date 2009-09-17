@@ -1,6 +1,8 @@
 #ifndef Exil_h__
 #define Exil_h__
 
+#pragma warning(disable:4996)
+
 #include <string>
 #include <map>
 #include <list>
@@ -9,10 +11,11 @@
 namespace Exil
 {
 	typedef std::string String;
+	const String BLANK_STRING;
 
-	struct Object;
-	struct Array;
-	struct Value;
+	class Value;
+	class Object;
+	class Array;
 	typedef std::pair<String, Value*> Pair;
 	typedef std::map<String, Value*> ValueMap;
 	typedef std::list<Value*> ValueList;

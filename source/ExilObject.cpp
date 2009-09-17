@@ -1,10 +1,21 @@
 #include <ExilObject.h>
+#include <ExilArray.h>
 
 namespace Exil
 {
 	Object::Object()
 	{
 		type = Types::Object;
+	}
+
+	Object::~Object()
+	{
+		for(ValueMap::iterator iter = values.begin();
+			iter != values.end();
+			++iter)
+		{
+			delete iter->second;
+		}
 	}
 
 	void Object::addValue( const String& name, Value* value )

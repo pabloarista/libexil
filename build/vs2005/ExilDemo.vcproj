@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="ExilDemo"
-	ProjectGUID="{D721E015-1A13-D448-BC38-63C636C58A22}"
+	ProjectGUID="{78F08786-15C4-EA48-A9FC-B36DB0319063}"
 	RootNamespace="ExilDemo"
 	Keyword="Win32Proj"
 	>

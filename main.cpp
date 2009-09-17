@@ -2,6 +2,7 @@
 #include <ExilArray.h>
 #include <ExilObject.h>
 #include <ExilValue.h>
+#include <ExilDataStream.h>
 #include <ExilXmlStream.h>
 #include <ExilJsonStream.h>
 
@@ -15,15 +16,49 @@ struct Vector3
 	float x,y,z;
 };
 
+struct Item
+{
+	Item(const String& n = Exil::BLANK_STRING, int q = 0)
+		: name(n), quantity(q)
+	{}
+	String name;
+	int quantity;
+};
+
+typedef std::list<Item> ItemList;
+
 struct Player
 {
 	String name;
 	int id;
 	Vector3 position;
+	ItemList items;
 };
 
 namespace Exil
 {
+
+	template<typename T>
+	struct TypeConversion<std::list<T> >
+	{
+		typedef std::list<T> Type;
+		static Value* convertTo(Type list)
+		{
+			Array* arr = new Array;
+			for(Type::iterator iter = list.begin();
+				iter != list.end();
+				++iter)
+			{
+				arr->addValue(*iter);
+			}
+
+			return arr;
+		}
+
+		static Type convertFrom(Value* val)
+		{
+		}
+	};
 
 	template<>
 	struct TypeConversion<Vector3>
@@ -63,14 +98,33 @@ namespace Exil
 	};
 
 	template<>
+	struct TypeConversion<Item>
+	{
+		static Value* convertTo(Item item)
+		{
+			Object* object = new Object;
+			object->addValue("name", item.name);
+			object->addValue("quantity", item.quantity);
+			return object;
+		}
+
+		static Item convertFrom(Value* value)
+		{
+			Item item;
+			return item;
+		}
+	};
+
+	template<>
 	struct TypeConversion<Player>
 	{
 		static Value* convertTo(Player player)
 		{
 			Object* object = new Object;
-			object->values.insert(Pair("name", new Value(player.name)));
-			object->values.insert(Pair("id", new Value(player.id)));
-			object->values.insert(Pair("position", TypeConversion<Vector3>::convertTo(player.position)));
+			object->addValue("name", player.name);
+			object->addValue("id", player.id);
+			object->addValue("position", player.position);
+			object->addValue("items", player.items);
 
 			return object;
 		}
@@ -87,24 +141,24 @@ namespace Exil
 
 int main()
 {
-	Vector3 vec1(1.1f, 2.2f, 3.3f);
-
-	Exil::Value* value = Exil::TypeConversion<Vector3>::convertTo(vec1);
-
-	std::cout << value;	
-
-	Vector3 vec2 = Exil::TypeConversion<Vector3>::convertFrom(value);
-
-	std::cout << vec2.x << ", " << vec2.y << ", " << vec2.z << std::endl;
-
 	Player player;
-	player.position = vec1;
+	player.position = Vector3(1.1f, 2.2f, 3.3f);
 	player.name = "Woot";
 	player.id = 12345;
+	player.items.push_back(Item("This", 1));
+	player.items.push_back(Item("Thing", 2));
+	player.items.push_back(Item("Wont", 3));
+	player.items.push_back(Item("Stop", 4));
 
-	Exil::Value* value2 = Exil::TypeConversion<Player>::convertTo(player);
+	Exil::JsonStream json(std::cout, true);
 
-	std::cout << value2;
+	json << player;
+
+	Exil::XmlStream xml(std::cout);
+
+	xml << player;
+
+	std::cin.get();
 
 	return 0;
 }

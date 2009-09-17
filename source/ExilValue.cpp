@@ -13,7 +13,7 @@ namespace Exil
 	Value::Value( int num )
 	{
 		type = Types::Number;
-		number = num;
+		number = static_cast<float>(num);
 	}
 
 	Value::Value( String _string )
@@ -35,6 +35,12 @@ namespace Exil
 	Value::Value()
 	{
 		type = Types::Null;
+	}
+
+	Value::~Value()
+	{
+		if(type == Types::String)
+			delete string;
 	}
 
 	bool Value::isNull()
@@ -72,7 +78,6 @@ namespace Exil
 
 		return NULL;
 	}
-
 	std::ostream& operator<< (std::ostream& os, Value* val)
 	{
 		os << "Value: ";
@@ -103,6 +108,31 @@ namespace Exil
 		return os;
 	}
 
+	namespace Convert
+	{
+		String toString(Value::Type type)
+		{
+			switch(type)
+			{
+			case Value::Types::Array:
+				return "Array";
+			case Value::Types::Object:
+				return "Object";
+			case Value::Types::String:
+				return "String";
+			case Value::Types::Number:
+				return "Number";
+			case Value::Types::True:
+				return "True";
+			case Value::Types::False:
+				return "False";
+			case Value::Types::Null:
+			default:
+				return "Null";
+			}
 
-};
+		}
+	};//namespace Convert
+
+};//namespace Exil
 
