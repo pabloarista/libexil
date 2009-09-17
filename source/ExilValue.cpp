@@ -80,14 +80,13 @@ namespace Exil
 	}
 	std::ostream& operator<< (std::ostream& os, Value* val)
 	{
-		os << "Value: ";
 		switch(val->type)
 		{
 		case Value::Types::Number:
-			os << "Number = " << val->toNumber<float>() << std::endl;
+			os << "Number(" << val->toNumber<float>() << ")" << std::endl;
 			break;
 		case Value::Types::String:
-			os << "String = " << val->toString() << std::endl;
+			os << "String(" << val->toString() << ")" <<  std::endl;
 			break;
 		case Value::Types::True:
 			os << "True" << std::endl;

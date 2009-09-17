@@ -31,7 +31,7 @@ namespace Exil
 			iter != val->values.end();
 			++iter)
 		{
-			os << iter->first << " = " << iter->second << std::endl;
+			os << "\"" << iter->first << "\" = " << iter->second << std::endl;
 		}
 
 		os << "}" << std::endl;

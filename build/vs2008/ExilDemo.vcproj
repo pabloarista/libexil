@@ -6,6 +6,7 @@
 	ProjectGUID="{AA8339E8-F2A5-9D4E-94F2-A69D47D442B1}"
 	RootNamespace="ExilDemo"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="0"
 	>
 	<Platforms>
 		<Platform
@@ -47,8 +48,8 @@
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
 				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -92,9 +93,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -129,8 +127,8 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
 				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
+				WarningLevel="3"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -175,9 +173,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -187,7 +182,6 @@
 	<Files>
 		<Filter
 			Name="include"
-			Filter=""
 			>
 			<File
 				RelativePath="..\..\include\Exil.h"
@@ -199,6 +193,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\ExilDataStream.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\ExilJsonParser.h"
 				>
 			</File>
 			<File
@@ -220,7 +218,6 @@
 		</Filter>
 		<Filter
 			Name="source"
-			Filter=""
 			>
 			<File
 				RelativePath="..\..\source\Exil.cpp"
@@ -232,6 +229,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\ExilDataStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\ExilJsonParser.cpp"
 				>
 			</File>
 			<File
@@ -252,11 +253,11 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\main.cpp"
+			RelativePath="..\..\DataStream.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\DataStream.cpp"
+			RelativePath="..\..\main.cpp"
 			>
 		</File>
 	</Files>

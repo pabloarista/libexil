@@ -1,10 +1,13 @@
 #include <iostream>
+#include <sstream>
 #include <ExilArray.h>
 #include <ExilObject.h>
 #include <ExilValue.h>
 #include <ExilDataStream.h>
 #include <ExilXmlStream.h>
 #include <ExilJsonStream.h>
+
+#include <ExilJsonParser.h>
 
 typedef std::string String;
 
@@ -33,6 +36,8 @@ struct Player
 	int id;
 	Vector3 position;
 	ItemList items;
+	bool alive;
+	bool dead;
 };
 
 namespace Exil
@@ -125,6 +130,8 @@ namespace Exil
 			object->addValue("id", player.id);
 			object->addValue("position", player.position);
 			object->addValue("items", player.items);
+			object->addValue("alive", player.alive);
+			object->addValue("dead", player.dead);
 
 			return object;
 		}
@@ -145,18 +152,36 @@ int main()
 	player.position = Vector3(1.1f, 2.2f, 3.3f);
 	player.name = "Woot";
 	player.id = 12345;
+	player.alive = true;
+	player.dead = false;
 	player.items.push_back(Item("This", 1));
 	player.items.push_back(Item("Thing", 2));
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-	Exil::JsonStream json(std::cout, true);
+
+	std::stringstream ss;
+
+	Exil::JsonStream json(ss, true);
 
 	json << player;
 
-	Exil::XmlStream xml(std::cout);
+/*	Exil::XmlStream xml(std::cout);
 
 	xml << player;
+*/
+
+	std::cout << ss.str();
+
+	Exil::JsonParser jparser(ss);
+
+	Exil::Value* object = jparser.parseObject();
+
+	std::cout << object;
+
+	Exil::JsonStream jout(std::cout);
+
+	jout << object;
 
 	std::cin.get();
 
