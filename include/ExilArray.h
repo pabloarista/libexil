@@ -2,7 +2,7 @@
 #define ExilArray_h__
 
 #include <Exil.h>
-#include <ExilObject.h>
+#include <ExilValue.h>
 
 namespace Exil
 {

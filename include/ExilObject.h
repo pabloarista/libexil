@@ -20,6 +20,20 @@ namespace Exil
 		{
 			addValue(name, TypeConversion<T>::convertTo(value));
 		}
+
+		bool hasValue(const String& name);
+
+		Value* getValue(const String& name);
+
+		template <typename T>
+		T getValue(const String& name)
+		{
+			Value* value = getValue(name);
+			if(!value)
+				throw ConversionException();
+
+			return TypeConversion<T>::convertFrom(value);
+		}
 	
 		ValueMap values;
 	};

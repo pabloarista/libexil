@@ -8,18 +8,6 @@ namespace Exil
 	class Value
 	{
 	public:
-		Value(float num);
-	
-		Value(int num);
-	
-		Value(String _string);
-	
-		Value(bool val);
-	
-		Value();
-
-		virtual ~Value();
-	
 		struct Types
 		{
 			enum Type
@@ -34,6 +22,19 @@ namespace Exil
 			};
 		};
 		typedef Types::Type Type;
+
+	public:
+		Value(float num);
+	
+		Value(int num);
+	
+		Value(String _string);
+	
+		Value(bool val);
+	
+		Value();
+
+		virtual ~Value();
 	
 		Object* toObject();
 	

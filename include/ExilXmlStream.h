@@ -2,17 +2,13 @@
 #define ExilXmlStream_h__
 
 #include <Exil.h>
-#include <ExilDataStream.h>
-
-#include <ExilValue.h>
-#include <ExilObject.h>
-#include <ExilArray.h>
 
 namespace Exil
 {
-	struct XmlStream : public DataStream
+	class XmlStream
 	{
-		XmlStream(std::ostream& stream);
+	public:
+		XmlStream(std::iostream& stream);
 
 		template <typename T>
 		XmlStream& operator<<(T type)
@@ -34,6 +30,7 @@ namespace Exil
 
 		void _decreaseTab();
 
+		std::iostream& mStream;
 		String mTabs;
 	};
 

@@ -1,9 +1,12 @@
 #include <ExilJsonStream.h>
+#include <ExilValue.h>
+#include <ExilObject.h>
+#include <ExilArray.h>
 
 namespace Exil
 {
-	JsonStream::JsonStream( std::ostream& stream, bool pretty )
-		: DataStream(stream), mPretty(pretty), mTabCount(0)
+	JsonStream::JsonStream( std::iostream& stream, bool pretty )
+		: mStream(stream), mPretty(pretty), mTabCount(0), mParser(stream)
 	{
 
 	}

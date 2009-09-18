@@ -1,8 +1,12 @@
 #include <ExilXmlStream.h>
+#include <ExilValue.h>
+#include <ExilObject.h>
+#include <ExilArray.h>
+
 namespace Exil
 {
-	XmlStream::XmlStream( std::ostream& stream )
-		: DataStream(stream)
+	XmlStream::XmlStream( std::iostream& stream )
+		: mStream(stream)
 	{
 
 	}

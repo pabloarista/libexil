@@ -8,7 +8,6 @@ namespace Exil
 	class JsonParser
 	{
 		std::istream& mStream;
-		bool inString;
 
 	public:
 		JsonParser(std::istream& stream);

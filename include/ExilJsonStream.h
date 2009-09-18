@@ -2,17 +2,14 @@
 #define ExilJsonStream_h__
 
 #include <Exil.h>
-#include <ExilDataStream.h>
-
-#include <ExilValue.h>
-#include <ExilObject.h>
-#include <ExilArray.h>
+#include <ExilJsonParser.h>
 
 namespace Exil
 {
-	struct JsonStream : public DataStream
+	class JsonStream
 	{
-		JsonStream(std::ostream& stream, bool pretty = true);
+	public:
+		JsonStream(std::iostream& stream, bool pretty = true);
 
 		template <typename T>
 		JsonStream& operator<<(T type)
@@ -21,6 +18,15 @@ namespace Exil
 		}
 
 		JsonStream& operator<<(Value* value);
+
+		template <typename T>
+		JsonStream& operator>>(T& type)
+		{
+			Value* value = mParser.parseValue();
+			type = TypeConversion<T>::convertFrom(value);
+			delete value;
+			return *this;
+		}
 
 		void _writeObject(Object* object, bool leadTab = true);
 
@@ -34,9 +40,11 @@ namespace Exil
 
 		void _decreaseTab();
 	
+		JsonParser mParser;
 		bool mPretty;
 		int mTabCount;
 		String mTabs;
+		std::iostream& mStream;
 	};
 
 };//namespace Exil

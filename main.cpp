@@ -62,6 +62,19 @@ namespace Exil
 
 		static Type convertFrom(Value* val)
 		{
+			Array* arr = NULL;
+			if( !(arr = val->toArray()) )
+				throw ConversionException();
+
+			Type list;
+			for(ValueList::iterator iter = arr->values.begin();
+				iter != arr->values.end();
+				++iter)
+			{
+				list.push_back(TypeConversion<T>::convertFrom(*iter));
+			}
+
+			return list;
 		}
 	};
 
@@ -82,21 +95,12 @@ namespace Exil
 		{
 			Object* object = NULL;
 			if( !(object = val->toObject()) )
-				return Vector3();
+				throw ConversionException();
 
 			Vector3 vec;
-
-			for(ValueMap::iterator iter = object->values.begin();
-				iter != object->values.end();
-				++iter)
-			{
-				if(iter->first.compare("x") == 0)
-					vec.x = iter->second->toNumber<float>();
-				else if(iter->first.compare("y") == 0)
-					vec.y = iter->second->toNumber<float>();
-				else if(iter->first.compare("z") == 0)
-					vec.z = iter->second->toNumber<float>();
-			}
+			vec.x = object->getValue<float>("x");
+			vec.y = object->getValue<float>("y");
+			vec.z = object->getValue<float>("z");
 
 			return vec;
 		}
@@ -115,7 +119,13 @@ namespace Exil
 
 		static Item convertFrom(Value* value)
 		{
+			Object* object = NULL;
+			if( !(object = value->toObject()) )
+				throw ConversionException();
+
 			Item item;
+			item.name = object->getValue<String>("name");
+			item.quantity = object->getValue<int>("quantity");
 			return item;
 		}
 	};
@@ -138,7 +148,18 @@ namespace Exil
 
 		static Player convertFrom(Value* value)
 		{
-			return Player();
+			Object* object = NULL;
+			if( !(object = value->toObject()) )
+				throw ConversionException();
+
+			Player player;
+			player.name = object->getValue<String>("name");
+			player.id = object->getValue<int>("id");
+			player.position = object->getValue<Vector3>("position");
+			player.items = object->getValue<std::list<Item> >("items");
+			player.alive = object->getValue<bool>("alive");
+			player.dead = object->getValue<bool>("dead");
+			return player;
 		}
 	};
 
@@ -166,22 +187,27 @@ int main()
 
 	json << player;
 
+	std::cout << ss.str() << std::endl;
+
+	Player player2;
+	json >> player2;
+
 /*	Exil::XmlStream xml(std::cout);
 
 	xml << player;
 */
 
-	std::cout << ss.str();
+	//std::cout << ss.str();
 
-	Exil::JsonParser jparser(ss);
+	//Exil::JsonParser jparser(ss);
 
-	Exil::Value* object = jparser.parseObject();
+	//Exil::Value* object = jparser.parseObject();
 
-	std::cout << object;
+	//std::cout << object;
 
-	Exil::JsonStream jout(std::cout);
+	//Exil::JsonStream jout(std::cout);
 
-	jout << object;
+	//jout << object;
 
 	std::cin.get();
 

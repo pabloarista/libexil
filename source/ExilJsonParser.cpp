@@ -5,7 +5,8 @@
 
 namespace Exil
 {
-	JsonParser::JsonParser( std::istream& stream ) : mStream(stream), inString(false)
+	JsonParser::JsonParser( std::istream& stream ) 
+		: mStream(stream)
 	{
 
 	}

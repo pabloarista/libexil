@@ -7,6 +7,7 @@
 #include <map>
 #include <list>
 #include <map>
+#include <exception>
 
 namespace Exil
 {
@@ -16,9 +17,31 @@ namespace Exil
 	class Value;
 	class Object;
 	class Array;
+	class JsonStream;
+	class JsonParser;
+	class XmlStream;
+	class XmlParser;
 	typedef std::pair<String, Value*> Pair;
 	typedef std::map<String, Value*> ValueMap;
 	typedef std::list<Value*> ValueList;
+
+	class Exception : public std::runtime_error
+	{
+	public:
+		Exception(const String& message)
+			: std::runtime_error(message)
+		{}
+	};
+
+	class ConversionException : public Exception
+	{
+	public:
+		ConversionException()
+			: Exception("Could not convert between types")
+		{}
+	};
+
+
 
 	template <typename T>
 	struct TypeConversion

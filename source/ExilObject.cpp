@@ -23,6 +23,21 @@ namespace Exil
 		values.insert(Pair(name, value));
 	}
 
+	bool Object::hasValue( const String& name )
+	{
+		return values.find(name) != values.end();
+	}
+
+	Value* Object::getValue( const String& name )
+	{
+		ValueMap::iterator iter = values.find(name);
+
+		if(iter != values.end())
+			return iter->second;
+
+		return NULL;
+	}
+
 	std::ostream& operator<< (std::ostream& os, Object* val)
 	{
 		os << "{" << std::endl;
