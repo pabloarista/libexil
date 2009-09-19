@@ -3,10 +3,9 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ExilDemo"
-	ProjectGUID="{AA8339E8-F2A5-9D4E-94F2-A69D47D442B1}"
+	ProjectGUID="{73E14B89-BD5B-D44D-A776-11C9E69B6793}"
 	RootNamespace="ExilDemo"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="0"
 	>
 	<Platforms>
 		<Platform
@@ -48,8 +47,8 @@
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				WarningLevel="3"
+				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -93,6 +92,9 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -127,8 +129,8 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				WarningLevel="3"
+				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -173,6 +175,9 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -182,6 +187,7 @@
 	<Files>
 		<Filter
 			Name="include"
+			Filter=""
 			>
 			<File
 				RelativePath="..\..\include\Exil.h"
@@ -189,10 +195,6 @@
 			</File>
 			<File
 				RelativePath="..\..\include\ExilArray.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\ExilDataStream.h"
 				>
 			</File>
 			<File
@@ -218,6 +220,7 @@
 		</Filter>
 		<Filter
 			Name="source"
+			Filter=""
 			>
 			<File
 				RelativePath="..\..\source\Exil.cpp"
@@ -225,10 +228,6 @@
 			</File>
 			<File
 				RelativePath="..\..\source\ExilArray.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\ExilDataStream.cpp"
 				>
 			</File>
 			<File
@@ -253,11 +252,11 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\DataStream.cpp"
+			RelativePath="..\..\main.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\main.cpp"
+			RelativePath="..\..\ReadMe.txt"
 			>
 		</File>
 	</Files>

@@ -64,7 +64,7 @@ namespace Exil
 
 	void JsonStream::_writeValue( Value* value, bool comma /*= false*/, bool leadTab /*= true*/ )
 	{
-		switch(value->type)
+		switch(value->type())
 		{
 		case Value::Types::Array:
 			_writeArray(value->toArray(), leadTab);

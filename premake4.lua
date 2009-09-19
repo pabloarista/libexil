@@ -12,7 +12,7 @@ solution "Exil"
 			"include/*.h",
 			"source/*.cpp",
 			"main.cpp",
-			"DataStream.cpp"
+			"ReadMe.txt"
 		}
 		includedirs { "include" }
 		objdir "intermediate"

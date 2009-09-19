@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="ExilDemo"
-	ProjectGUID="{78F08786-15C4-EA48-A9FC-B36DB0319063}"
+	ProjectGUID="{C690E414-E935-5646-8FBC-5D447E6022FF}"
 	RootNamespace="ExilDemo"
 	Keyword="Win32Proj"
 	>
@@ -200,7 +200,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilDataStream.h"
+				RelativePath="..\..\include\ExilJsonParser.h"
 				>
 			</File>
 			<File
@@ -233,7 +233,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\ExilDataStream.cpp"
+				RelativePath="..\..\source\ExilJsonParser.cpp"
 				>
 			</File>
 			<File
@@ -258,7 +258,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\DataStream.cpp"
+			RelativePath="..\..\ReadMe.txt"
 			>
 		</File>
 	</Files>

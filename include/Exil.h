@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <list>
+#include <vector>
 #include <map>
 #include <exception>
 
@@ -28,20 +29,14 @@ namespace Exil
 	class Exception : public std::runtime_error
 	{
 	public:
-		Exception(const String& message)
-			: std::runtime_error(message)
-		{}
+		Exception(const String& message);
 	};
 
 	class ConversionException : public Exception
 	{
 	public:
-		ConversionException()
-			: Exception("Could not convert between types")
-		{}
+		ConversionException();
 	};
-
-
 
 	template <typename T>
 	struct TypeConversion

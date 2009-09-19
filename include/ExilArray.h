@@ -25,5 +25,75 @@ namespace Exil
 
 	std::ostream& operator<< (std::ostream& os, Array* val);
 
+#pragma region Conversion Methods
+	template<typename T>
+	struct TypeConversion<std::list<T> >
+	{
+		typedef std::list<T> Type;
+		static Value* convertTo(Type list)
+		{
+			Array* arr = new Array;
+			for(Type::iterator iter = list.begin();
+				iter != list.end();
+				++iter)
+			{
+				arr->addValue(*iter);
+			}
+
+			return arr;
+		}
+
+		static Type convertFrom(Value* val)
+		{
+			Array* arr = NULL;
+			if( !(arr = val->toArray()) )
+				throw ConversionException();
+
+			Type list;
+			for(ValueList::iterator iter = arr->values.begin();
+				iter != arr->values.end();
+				++iter)
+			{
+				list.push_back(TypeConversion<T>::convertFrom(*iter));
+			}
+
+			return list;
+		}
+	};
+
+	template<typename T>
+	struct TypeConversion<std::vector<T> >
+	{
+		typedef std::vector<T> Type;
+		static Value* convertTo(Type list)
+		{
+			Array* arr = new Array;
+			for(Type::iterator iter = list.begin();
+				iter != list.end();
+				++iter)
+			{
+				arr->addValue(*iter);
+			}
+
+			return arr;
+		}
+
+		static Type convertFrom(Value* val)
+		{
+			Array* arr = value->toArray();
+
+			Type list;
+			for(ValueList::iterator iter = arr->values.begin();
+				iter != arr->values.end();
+				++iter)
+			{
+				list.push_back(TypeConversion<T>::convertFrom(*iter));
+			}
+
+			return list;
+		}
+	};
+#pragma endregion Conversion Methods
+
 };
 #endif // ExilArray_h__

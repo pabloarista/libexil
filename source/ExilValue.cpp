@@ -6,81 +6,81 @@ namespace Exil
 {
 	Value::Value( float num )
 	{
-		type = Types::Number;
-		number = num;
+		mType = Types::Number;
+		mNumber = num;
 	}
 
 	Value::Value( int num )
 	{
-		type = Types::Number;
-		number = static_cast<float>(num);
+		mType = Types::Number;
+		mNumber = static_cast<float>(num);
 	}
 
 	Value::Value( String _string )
 	{
-		type = Types::String;
-		string = new char[_string.size() + 1];
-		strncpy(string, _string.c_str(), _string.size());
-		string[_string.size()] = 0;
+		mType = Types::String;
+		mString = new char[_string.size() + 1];
+		strncpy(mString, _string.c_str(), _string.size());
+		mString[_string.size()] = 0;
 	}
 
 	Value::Value( bool val )
 	{
 		if(val)
-			type = Types::True;
+			mType = Types::True;
 		else
-			type = Types::False;
+			mType = Types::False;
 	}
 
 	Value::Value()
 	{
-		type = Types::Null;
+		mType = Types::Null;
 	}
 
 	Value::~Value()
 	{
-		if(type == Types::String)
-			delete string;
+		if(mType == Types::String)
+			delete mString;
 	}
 
 	bool Value::isNull()
 	{
-		return type == Types::Null;
+		return mType == Types::Null;
 	}
 
 	bool Value::isTrue()
 	{
-		return type == Types::True;
+		return mType == Types::True;
 	}
 
 	bool Value::isFalse()
 	{
-		return type == Types::False;
+		return mType == Types::False;
 	}
 
 	char* Value::toString()
 	{
-		return string;
+		return mString;
 	}
 
 	Object* Value::toObject()
 	{
-		if(type == Types::Object)
-			return static_cast<Object*>(this);
+		if(mType != Types::Object)
+			throw ConversionException();
 
-		return NULL;
+		return static_cast<Object*>(this);
 	}
 
 	Array* Value::toArray()
 	{
-		if(type == Types::Array)
-			return static_cast<Array*>(this);
+		if(mType != Types::Array)
+			throw ConversionException();
 
-		return NULL;
+		return static_cast<Array*>(this);
 	}
 	std::ostream& operator<< (std::ostream& os, Value* val)
 	{
-		switch(val->type)
+		switch(val->type())
 		{
 		case Value::Types::Number:
 			os << "Number(" << val->toNumber<float>() << ")" << std::endl;

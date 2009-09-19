@@ -66,13 +66,12 @@ endif
 OBJECTS := \
 	$(OBJDIR)/Exil.o \
 	$(OBJDIR)/ExilArray.o \
-	$(OBJDIR)/ExilDataStream.o \
+	$(OBJDIR)/ExilJsonParser.o \
 	$(OBJDIR)/ExilJsonStream.o \
 	$(OBJDIR)/ExilObject.o \
 	$(OBJDIR)/ExilValue.o \
 	$(OBJDIR)/ExilXmlStream.o \
 	$(OBJDIR)/main.o \
-	$(OBJDIR)/DataStream.o \
 
 RESOURCES := \
 
@@ -137,7 +136,7 @@ $(OBJDIR)/Exil.o: ../../source/Exil.cpp
 $(OBJDIR)/ExilArray.o: ../../source/ExilArray.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o $@ -c $<
-$(OBJDIR)/ExilDataStream.o: ../../source/ExilDataStream.cpp
+$(OBJDIR)/ExilJsonParser.o: ../../source/ExilJsonParser.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o $@ -c $<
 $(OBJDIR)/ExilJsonStream.o: ../../source/ExilJsonStream.cpp
@@ -153,9 +152,6 @@ $(OBJDIR)/ExilXmlStream.o: ../../source/ExilXmlStream.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o $@ -c $<
 $(OBJDIR)/main.o: ../../main.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o $@ -c $<
-$(OBJDIR)/DataStream.o: ../../DataStream.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o $@ -c $<
 

@@ -3,11 +3,8 @@
 #include <ExilArray.h>
 #include <ExilObject.h>
 #include <ExilValue.h>
-#include <ExilDataStream.h>
 #include <ExilXmlStream.h>
 #include <ExilJsonStream.h>
-
-#include <ExilJsonParser.h>
 
 typedef std::string String;
 
@@ -42,42 +39,6 @@ struct Player
 
 namespace Exil
 {
-
-	template<typename T>
-	struct TypeConversion<std::list<T> >
-	{
-		typedef std::list<T> Type;
-		static Value* convertTo(Type list)
-		{
-			Array* arr = new Array;
-			for(Type::iterator iter = list.begin();
-				iter != list.end();
-				++iter)
-			{
-				arr->addValue(*iter);
-			}
-
-			return arr;
-		}
-
-		static Type convertFrom(Value* val)
-		{
-			Array* arr = NULL;
-			if( !(arr = val->toArray()) )
-				throw ConversionException();
-
-			Type list;
-			for(ValueList::iterator iter = arr->values.begin();
-				iter != arr->values.end();
-				++iter)
-			{
-				list.push_back(TypeConversion<T>::convertFrom(*iter));
-			}
-
-			return list;
-		}
-	};
-
 	template<>
 	struct TypeConversion<Vector3>
 	{
@@ -91,11 +52,9 @@ namespace Exil
 			return object;
 		}
 
-		static Vector3 convertFrom(Value* val)
+		static Vector3 convertFrom(Value* value)
 		{
-			Object* object = NULL;
-			if( !(object = val->toObject()) )
-				throw ConversionException();
+			Object* object = value->toObject();
 
 			Vector3 vec;
 			vec.x = object->getValue<float>("x");
@@ -119,9 +78,7 @@ namespace Exil
 
 		static Item convertFrom(Value* value)
 		{
-			Object* object = NULL;
-			if( !(object = value->toObject()) )
-				throw ConversionException();
+			Object* object = value->toObject();
 
 			Item item;
 			item.name = object->getValue<String>("name");
@@ -148,15 +105,13 @@ namespace Exil
 
 		static Player convertFrom(Value* value)
 		{
-			Object* object = NULL;
-			if( !(object = value->toObject()) )
-				throw ConversionException();
+			Object* object = value->toObject();
 
 			Player player;
 			player.name = object->getValue<String>("name");
 			player.id = object->getValue<int>("id");
 			player.position = object->getValue<Vector3>("position");
-			player.items = object->getValue<std::list<Item> >("items");
+			player.items = object->getValue<ItemList>("items");
 			player.alive = object->getValue<bool>("alive");
 			player.dead = object->getValue<bool>("dead");
 			return player;
@@ -189,13 +144,16 @@ int main()
 
 	std::cout << ss.str() << std::endl;
 
-	Player player2;
-	json >> player2;
+//	Player player2;
+//	json >> player2;
 
-/*	Exil::XmlStream xml(std::cout);
+	Exil::Value* value = json.get();
 
-	xml << player;
-*/
+	std::stringstream ss2;
+	Exil::XmlStream xml(ss2);
+	xml << value;
+
+	std::cout << ss2.str() << std::endl;
 
 	//std::cout << ss.str();
 

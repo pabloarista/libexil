@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExilDemo", "ExilDemo.vcproj", "{78F08786-15C4-EA48-A9FC-B36DB0319063}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExilDemo", "ExilDemo.vcproj", "{C690E414-E935-5646-8FBC-5D447E6022FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{78F08786-15C4-EA48-A9FC-B36DB0319063}.Debug|Win32.ActiveCfg = Debug|Win32
-		{78F08786-15C4-EA48-A9FC-B36DB0319063}.Debug|Win32.Build.0 = Debug|Win32
-		{78F08786-15C4-EA48-A9FC-B36DB0319063}.Release|Win32.ActiveCfg = Release|Win32
-		{78F08786-15C4-EA48-A9FC-B36DB0319063}.Release|Win32.Build.0 = Release|Win32
+		{C690E414-E935-5646-8FBC-5D447E6022FF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C690E414-E935-5646-8FBC-5D447E6022FF}.Debug|Win32.Build.0 = Debug|Win32
+		{C690E414-E935-5646-8FBC-5D447E6022FF}.Release|Win32.ActiveCfg = Release|Win32
+		{C690E414-E935-5646-8FBC-5D447E6022FF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

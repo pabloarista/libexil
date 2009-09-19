@@ -5,7 +5,7 @@ namespace Exil
 {
 	Object::Object()
 	{
-		type = Types::Object;
+		mType = Types::Object;
 	}
 
 	Object::~Object()
@@ -21,6 +21,11 @@ namespace Exil
 	void Object::addValue( const String& name, Value* value )
 	{
 		values.insert(Pair(name, value));
+	}
+
+	void Object::addValue( const Pair& pair)
+	{
+		values.insert(pair);
 	}
 
 	bool Object::hasValue( const String& name )

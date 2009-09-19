@@ -5,7 +5,7 @@ namespace Exil
 {
 	Array::Array()
 	{
-		type = Types::Array;
+		mType = Types::Array;
 	}
 
 	Array::~Array()

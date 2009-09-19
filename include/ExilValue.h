@@ -52,26 +52,35 @@ namespace Exil
 		template <>
 		float toNumber<float>()
 		{
-			return number;
+			return mNumber;
 		}
 	
 		template <>
 		int toNumber<int>()
 		{
-			return static_cast<int>(number);
+			return static_cast<int>(mNumber);
 		}
 	
 		char* toString();
-	
+
+		inline Type type()
+		{
+			return mType;
+		}
+
+	protected:
 		// data
-		Type type;
+		Type mType;
+
+	private:
 		union
 		{
-			float number;
-			char* string;
+			float mNumber;
+			char* mString;
 		};
 	};
 
+#pragma region Conversion Methods
 	template <>
 	struct TypeConversion<float>
 	{
@@ -135,6 +144,7 @@ namespace Exil
 		String toString(Value::Type type);
 	}
 
+#pragma endregion Conversion Methods
 };//namespace Exil
 
 #endif // ExilValue_h__

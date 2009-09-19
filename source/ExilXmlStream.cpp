@@ -54,14 +54,14 @@ namespace Exil
 
 	void XmlStream::_writePair( const String& name, Value* value )
 	{
-		if(value->type == Value::Types::Array || value->type == Value::Types::Object)
+		if(value->type() == Value::Types::Array || value->type() == Value::Types::Object)
 		{
-			mStream << mTabs << "<" << Convert::toString(value->type) <<" name=\"" << name << "\">" << std::endl;
+			mStream << mTabs << "<" << Convert::toString(value->type()) <<" name=\"" << name << "\">" << std::endl;
 			_writeValue(value, false, false);
 		}
 		else
 		{
-			mStream << mTabs << "<" << Convert::toString(value->type) << " " << name << "=";
+			mStream << mTabs << "<" << Convert::toString(value->type()) << " " << name << "=";
 			_writeValue(value, true, false);
 			mStream << " />" << std::endl;
 		}
@@ -69,7 +69,7 @@ namespace Exil
 
 	void XmlStream::_writeValue( Value* value, bool writeName /*= true*/, bool leadTab /*= true*/ )
 	{
-		switch(value->type)
+		switch(value->type())
 		{
 		case Value::Types::Array:
 			_writeArray(value->toArray(), writeName, leadTab);

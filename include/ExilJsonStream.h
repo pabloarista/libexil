@@ -28,6 +28,11 @@ namespace Exil
 			return *this;
 		}
 
+		Value* get()
+		{
+			return mParser.parseValue();
+		}
+
 		void _writeObject(Object* object, bool leadTab = true);
 
 		void _writeArray(Array* list, bool leadTab = true);

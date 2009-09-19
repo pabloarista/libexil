@@ -93,7 +93,7 @@ namespace Exil
 				continue;
 			}
 
-			object->values.insert(parsePair(ch));
+			object->addValue(parsePair(ch));
 			mStream.get(ch);
 		}
 

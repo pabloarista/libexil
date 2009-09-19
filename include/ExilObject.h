@@ -14,6 +14,8 @@ namespace Exil
 		~Object();
 	
 		void addValue(const String& name, Value* value);
+
+		void addValue( const Pair& pair);
 	
 		template <typename T>
 		void addValue(const String& name, T value)
@@ -34,7 +36,7 @@ namespace Exil
 
 			return TypeConversion<T>::convertFrom(value);
 		}
-	
+
 		ValueMap values;
 	};
 
