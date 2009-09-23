@@ -2,6 +2,7 @@
 #define Exil_h__
 
 #pragma warning(disable:4996)
+#pragma warning (disable:4661)
 
 #include <string>
 #include <map>
@@ -41,7 +42,7 @@ namespace Exil
 	template <typename T>
 	struct TypeConversion
 	{
-		static Value* convertTo(typename T);
+		static Value* convertTo(T);
 
 		static T convertFrom(Value*);
 	};

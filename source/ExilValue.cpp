@@ -26,10 +26,8 @@ namespace Exil
 
 	Value::Value( bool val )
 	{
-		if(val)
-			mType = Types::True;
-		else
-			mType = Types::False;
+		mType = Types::Bool;
+		mBool = val;
 	}
 
 	Value::Value()
@@ -48,14 +46,12 @@ namespace Exil
 		return mType == Types::Null;
 	}
 
-	bool Value::isTrue()
+	bool Value::toBool()
 	{
-		return mType == Types::True;
-	}
+		if(mType != Types::Bool)
+			throw ConversionException();
 
-	bool Value::isFalse()
-	{
-		return mType == Types::False;
+		return mBool;
 	}
 
 	char* Value::toString()
@@ -88,11 +84,11 @@ namespace Exil
 		case Value::Types::String:
 			os << "String(" << val->toString() << ")" <<  std::endl;
 			break;
-		case Value::Types::True:
-			os << "True" << std::endl;
-			break;
-		case Value::Types::False:
-			os << "False" << std::endl;
+		case Value::Types::Bool:
+			if(val->toBool())
+				os << "True" << std::endl;
+			else
+				os << "False" << std::endl;
 			break;
 		case Value::Types::Null:
 			os << "Null" << std::endl;
@@ -121,16 +117,32 @@ namespace Exil
 				return "String";
 			case Value::Types::Number:
 				return "Number";
-			case Value::Types::True:
-				return "True";
-			case Value::Types::False:
-				return "False";
+			case Value::Types::Bool:
+				return "Bool";
 			case Value::Types::Null:
 			default:
 				return "Null";
 			}
-
 		}
+
+		Value::Type toValueType(const String& str)
+		{
+			if(str == "Array")
+				return Value::Types::Array;
+			if(str == "Object")
+				return Value::Types::Object;
+			if(str == "String")
+				return Value::Types::String;
+			if(str == "Number")
+				return Value::Types::Number;
+			if(str == "Bool")
+				return Value::Types::Bool;
+			if(str == "Null")
+				return Value::Types::Null;
+
+			throw ConversionException();
+		}
+
 	};//namespace Convert
 
 };//namespace Exil

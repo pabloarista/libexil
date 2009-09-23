@@ -6,6 +6,8 @@
 #include <ExilXmlStream.h>
 #include <ExilJsonStream.h>
 
+#include <ExilXmlParser.h>
+
 typedef std::string String;
 
 struct Vector3
@@ -135,25 +137,28 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-
 	std::stringstream ss;
 
-	Exil::JsonStream json(ss, true);
+	Exil::XmlStream xml(ss);
+	Exil::XmlParser xparser(ss);
 
-	json << player;
+	xml << player;
 
-	std::cout << ss.str() << std::endl;
+	Exil::Value* val = xparser.getRoot();
 
+
+	std::stringstream ss2;
+	Exil::JsonStream json(ss2, true);
+	json << val;
+	std::cout << ss2.str() << std::endl;
 //	Player player2;
 //	json >> player2;
 
-	Exil::Value* value = json.get();
-
-	std::stringstream ss2;
-	Exil::XmlStream xml(ss2);
-	xml << value;
-
-	std::cout << ss2.str() << std::endl;
+//	Exil::Value* value = json.get();
+//	std::stringstream ss2;
+//	Exil::XmlStream xml(ss2);
+//	xml << value;
+//	std::cout << ss2.str() << std::endl;
 
 	//std::cout << ss.str();
 

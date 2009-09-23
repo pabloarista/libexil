@@ -21,7 +21,7 @@ namespace Exil
 		while(!(mStream.eof() || (ch == '"' && lastCh != '\\')))
 		{
 			lastCh = ch;
-			str.append(1, ch);
+			str.push_back(ch);
 			mStream.get(ch);
 		}
 

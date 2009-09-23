@@ -16,9 +16,8 @@ namespace Exil
 				String,
 				Object,
 				Array,
-				True,
-				False,
-				Null			
+				Bool,
+				Null
 			};
 		};
 		typedef Types::Type Type;
@@ -39,12 +38,10 @@ namespace Exil
 		Object* toObject();
 	
 		Array* toArray();
+
+		bool toBool();
 	
 		bool isNull();
-	
-		bool isTrue();
-	
-		bool isFalse();
 	
 		template <typename NumberType>
 		NumberType toNumber();
@@ -77,6 +74,7 @@ namespace Exil
 		{
 			float mNumber;
 			char* mString;
+			bool mBool;
 		};
 	};
 
@@ -133,7 +131,7 @@ namespace Exil
 
 		static bool convertFrom(Value* value)
 		{
-			return value->isTrue();
+			return value->toBool();
 		}
 	};
 
@@ -142,6 +140,7 @@ namespace Exil
 	namespace Convert
 	{
 		String toString(Value::Type type);
+		Value::Type toValueType(const String& str);
 	}
 
 #pragma endregion Conversion Methods

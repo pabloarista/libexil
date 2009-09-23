@@ -6,6 +6,7 @@
 	ProjectGUID="{73E14B89-BD5B-D44D-A776-11C9E69B6793}"
 	RootNamespace="ExilDemo"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="0"
 	>
 	<Platforms>
 		<Platform
@@ -47,8 +48,8 @@
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
 				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -92,9 +93,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -129,8 +127,8 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
 				ProgramDataBaseFileName="$(OutDir)\$(ProjectName).pdb"
+				WarningLevel="3"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -175,9 +173,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -187,7 +182,6 @@
 	<Files>
 		<Filter
 			Name="include"
-			Filter=""
 			>
 			<File
 				RelativePath="..\..\include\Exil.h"
@@ -214,13 +208,16 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ExilXmlParser.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ExilXmlStream.h"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="source"
-			Filter=""
 			>
 			<File
 				RelativePath="..\..\source\Exil.cpp"
@@ -247,6 +244,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\ExilXmlParser.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\ExilXmlStream.cpp"
 				>
 			</File>
@@ -257,6 +258,10 @@
 		</File>
 		<File
 			RelativePath="..\..\ReadMe.txt"
+			>
+		</File>
+		<File
+			RelativePath="..\..\Sample.txt"
 			>
 		</File>
 	</Files>

@@ -1,0 +1,59 @@
+{
+        "alive" : true,
+        "dead" : false,
+        "id" : 12345,
+        "items" : [
+                {
+                        "name" : "This",
+                        "quantity" : 1
+                },
+                {
+                        "name" : "Thing",
+                        "quantity" : 2
+                },
+                {
+                        "name" : "Wont",
+                        "quantity" : 3
+                },
+                {
+                        "name" : "Stop",
+                        "quantity" : 4
+                },
+        ],
+        "name" : "Woot",
+        "position" : {
+                "x" : 1.1,
+                "y" : 2.2,
+                "z" : 3.3
+        }
+}
+
+<Object>
+        <Bool alive="true" />
+        <Bool dead="false" />
+        <Number id="12345" />
+        <Array name="items">
+                <Object>
+                        <String name="This" />
+                        <Number quantity="1" />
+                </Object>
+                <Object>
+                        <String name="Thing" />
+                        <Number quantity="2" />
+                </Object>
+                <Object>
+                        <String name="Wont" />
+                        <Number quantity="3" />
+                </Object>
+                <Object>
+                        <String name="Stop" />
+                        <Number quantity="4" />
+                </Object>
+        </Array>
+        <String name="Woot" />
+        <Object name="position">
+                <Number x="1.1" />
+                <Number y="2.2" />
+                <Number z="3.3" />
+        </Object>
+</Object>

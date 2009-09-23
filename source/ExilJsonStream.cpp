@@ -14,7 +14,7 @@ namespace Exil
 	JsonStream& JsonStream::operator<<( Value* value )
 	{
 		_writeValue(value);
-		delete value;
+		//delete value;
 		return *this;
 	}
 
@@ -78,11 +78,11 @@ namespace Exil
 		case Value::Types::Number:
 			mStream << (leadTab?mTabs:BLANK_STRING) << value->toNumber<float>();
 			break;
-		case Value::Types::True:
-			mStream << (leadTab?mTabs:BLANK_STRING) << "true";
-			break;
-		case Value::Types::False:
-			mStream << (leadTab?mTabs:BLANK_STRING) << "false";
+		case Value::Types::Bool:
+			if(value->toBool())
+				mStream << (leadTab?mTabs:BLANK_STRING) << "true";
+			else
+				mStream << (leadTab?mTabs:BLANK_STRING) << "false";
 			break;
 		case Value::Types::Null:
 			mStream << (leadTab?mTabs:BLANK_STRING) << "null";

@@ -59,6 +59,12 @@ namespace Exil
 			mStream << mTabs << "<" << Convert::toString(value->type()) <<" name=\"" << name << "\">" << std::endl;
 			_writeValue(value, false, false);
 		}
+		else if(value->type() == Value::Types::Bool)
+		{
+			mStream << mTabs << "<Bool " << name << "=";
+			_writeValue(value, true, false);
+			mStream << " />" << std::endl;
+		}
 		else
 		{
 			mStream << mTabs << "<" << Convert::toString(value->type()) << " " << name << "=";
@@ -83,11 +89,11 @@ namespace Exil
 		case Value::Types::Number:
 			mStream << (leadTab?mTabs:BLANK_STRING) << "\"" << value->toNumber<float>() << "\"";
 			break;
-		case Value::Types::True:
-			mStream << (leadTab?mTabs:BLANK_STRING) << "\"true\"";
-			break;
-		case Value::Types::False:
-			mStream << (leadTab?mTabs:BLANK_STRING) << "\"false\"";
+		case Value::Types::Bool:
+			if(value->toBool())
+				mStream << (leadTab?mTabs:BLANK_STRING) << "\"true\"";
+			else
+				mStream << (leadTab?mTabs:BLANK_STRING) << "\"false\"";
 			break;
 		case Value::Types::Null:
 			mStream << (leadTab?mTabs:BLANK_STRING) << "\"null\"";
