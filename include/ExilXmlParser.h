@@ -7,109 +7,237 @@
 #include <ExilArray.h>
 #include <cctype>
 
+/*
+typedef std::pair<String, String> StringPair;
+
+// gets anonymous node.
+parse:
+	char ch;
+	StringPair nameValuePair;
+	String tagName;
+	while(!eof)
+		get ch
+		getTagName(tagName, ch);
+
+		// if there is a space, there is either a named value or a '/'
+		if(ch != ' ')
+			while(!eof)
+				get ch
+				if(ch == '/')
+					// eat the '>'
+					mStream.get(ch);
+					break;
+				else if(isalnum(ch))
+					StringPair pair = parseTagPair(ch);
+					pair.second
+
+		switch(tagName)
+		{
+			case String:
+				return new Value(pair.second);
+			case Number:
+				return new Value(toNumber(pair.second));
+			case Bool:
+				return new Value(toBool(pair.second));
+			case Object:
+				return parseObject();
+			case Array:
+				return parseArray();
+			default:
+				return Value();
+		}
+
+*/
+
+
 namespace Exil
 {
 	class XmlParser
 	{
+	public:
+		typedef std::pair<String, String> StringPair;
+
 	public:
 		XmlParser(std::istream& stream)
 			: mStream(stream)
 		{
 		}
 
-		String parseTagName()
+		Value* parseAnonymousValue()
 		{
 			char ch;
-			String str;
+			StringPair nameValuePair;
+			String tagName;
+			Value::Type type;
+			while(!mStream.eof())
+			{
+				mStream.get(ch);
+				while(!mStream.eof() && isspace(ch))
+					mStream.get(ch);
+
+				getTagName(tagName, ch);
+				type = Convert::toValueType(tagName);
+
+				// if there is a space, there is either a named value or a '/'
+				if(ch == ' ')
+				{
+					while(!mStream.eof())
+					{
+						mStream.get(ch);
+						if(ch == '/')
+						{
+							// eat the '>'
+							mStream.get(ch);
+							break;
+						}
+						else if(isalnum(ch))
+						{
+							nameValuePair = parseTagPair(ch);
+						}
+					}
+				}
+
+				switch(type)
+				{
+				case Value::Types::String:
+					return new Value(nameValuePair.second);
+				case Value::Types::Number:
+					return toNumber(nameValuePair.second);
+				case Value::Types::Bool:
+					return toBool(nameValuePair.second);
+				case Value::Types::Object:
+					return parseObject();
+				case Value::Types::Array:
+					return parseArray();
+				default:
+					return new Value();
+				}
+			}
+
+			return new Value();
+		}
+
+		Pair parseValuePair()
+		{
+			char ch;
+			StringPair nameValuePair;
+			String tagName;
+			Value::Type type;
+
+			while(!mStream.eof())
+			{
+				mStream.get(ch);
+				while(!mStream.eof() && isspace(ch))
+					mStream.get(ch);
+
+				getTagName(tagName, ch);
+				type = Convert::toValueType(tagName);
+
+				// if there is a space, there is either a named value or a '/'
+				if(ch == ' ')
+				{
+					while(!mStream.eof())
+					{
+						mStream.get(ch);
+						if(ch == '/')
+						{
+							// eat the '>'
+							mStream.get(ch);
+							break;
+						}
+						else if(isalnum(ch))
+						{
+							nameValuePair = parseTagPair(ch);
+						}
+					}
+				}
+
+				switch(type)
+				{
+				case Value::Types::String:
+					return Pair(nameValuePair.first, new Value(nameValuePair.second));
+				case Value::Types::Number:
+					return Pair(nameValuePair.first, toNumber(nameValuePair.second));
+				case Value::Types::Bool:
+					return Pair(nameValuePair.first, toBool(nameValuePair.second));
+				case Value::Types::Object:
+					return Pair(nameValuePair.first, parseObject());
+				case Value::Types::Array:
+					return Pair(nameValuePair.first, parseArray());
+				default:
+					return Pair(nameValuePair.first, new Value());
+				}
+			}
+
+			return Pair(nameValuePair.first, new Value());
+		}
+
+		StringPair parseTagPair(char ch)
+		{
+			String key;
+			String value;
+
+			while(!mStream.eof() && isalnum(ch))
+			{
+				key.push_back(ch);
+				mStream.get(ch);
+			}
+
+			while(!mStream.eof() && !isalnum(ch))
+				mStream.get(ch);
+
+			while(!mStream.eof() && isalnum(ch))
+			{
+				value.push_back(ch);
+				mStream.get(ch);
+			}
+
+			return StringPair(key,value);
+		}
+
+		void getTagName(String& tagName, char& ch)
+		{
 			mStream.get(ch);
 			while(!mStream.eof() && isalnum(ch))
 			{
-				str.push_back(ch);
+				tagName.push_back(ch);
 				mStream.get(ch);
 			}
-
-			return str;
 		}
 
-		String parseKeyName()
-		{
-			char lastCh = 0;
-			char ch;
-			String str;
-
-			mStream.get(ch);
-			while( !mStream.eof() && isalnum(ch) )
-			{
-				lastCh = ch;
-				str.push_back(ch);
-				mStream.get(ch);
-			}
-
-			return str;
-		}
-
-		Value* parseNumber()
+		Value* toNumber(const String& str)
 		{
 			float number = 0.0f;
-			char ch;
-
-			mStream.get(ch);
-			while(!mStream.eof() && isdigit(ch))
+			String::const_iterator iter = str.begin();
+			while(iter != str.end() && isdigit(*iter))
 			{
-				if(ch == '.')
+				if(*iter == '.')
 					break;
-				number = number * 10.0f + toNumber(ch);
-				mStream.get(ch);
+				number = number * 10.0f + toNumber(*iter);
+				++iter;
 			}
 
-			if(ch == '.')
+			if(iter != str.end() && *iter == '.')
 			{
 				float denom = 10.0f;
-				mStream.get(ch);
-				while(!mStream.eof() && isdigit(ch))
+				++iter;
+				while(iter != str.end() && isdigit(*iter))
 				{
-					number = number + toNumber(ch) / denom;
+					number = number + toNumber(*iter) / denom;
 					denom *= 10.f;
-					mStream.get(ch);
+					++iter;
 				}
 			}
 
 			return new Value(number);
 		}
 
-		Value* parseString()
+		Value* toBool(const String& str)
 		{
-			char lastCh = 0;
-			char ch;
-			String str;
-
-			mStream.get(ch);
-			while(!(mStream.eof() || (ch == '"' && lastCh != '\\')))
-			{
-				lastCh = ch;
-				str.push_back(ch);
-				mStream.get(ch);
-			}
-
-			return new Value(str);
-		}
-
-		Value* parseBool()
-		{
-			char ch;
-			mStream.get(ch);
-			if(ch == 't')
-			{
-				mStream.ignore(3);
+			if(str.at(0) == 't')
 				return new Value(true);
-			}
-			if(ch == 'f')
-			{
-				mStream.ignore(4);
+			else
 				return new Value(false);
-			}
-
-			return new Value();			
 		}
 
 		Object* parseObject()
@@ -118,12 +246,24 @@ namespace Exil
 
 			while(!mStream.eof())
 			{
-				Pair pair = parseObjectPair();
+				Pair pair = parseValuePair();
 				obj->addValue(pair);
 			}
 			return obj;
 		}
 
+		Array* parseArray()
+		{
+			Array* arr = new Array;
+
+			while(!mStream.eof())
+			{
+				Value* value = parseAnonymousValue();
+				arr->addValue(value);
+			}
+			return arr;
+		}
+/*
 		Value* getRoot()
 		{
 			Pair pair = parseObjectPair();
@@ -235,7 +375,7 @@ namespace Exil
 				}
 			}//end while
 		}
-
+*/
 		inline float toNumber(char ch)
 		{
 			return static_cast<float>(ch - 48);

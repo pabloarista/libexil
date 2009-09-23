@@ -144,7 +144,7 @@ int main()
 
 	xml << player;
 
-	Exil::Value* val = xparser.getRoot();
+	Exil::Value* val = xparser.parseAnonymousValue();
 
 
 	std::stringstream ss2;
