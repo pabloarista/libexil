@@ -143,6 +143,7 @@ int main()
 	Exil::XmlParser xparser(ss);
 
 	xml << player;
+	std::cout << ss.str() << std::endl;
 
 	Exil::Value* val = xparser.parseAnonymousValue();
 

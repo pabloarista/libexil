@@ -76,6 +76,18 @@ namespace Exil
 					mStream.get(ch);
 
 				getTagName(tagName, ch);
+
+				// consume end tag
+				if(tagName.empty() && ch == '/')
+				{
+					while(!mStream.eof() && ch != '>')
+					{
+						mStream.get(ch);
+					}
+					return NULL;
+					continue;
+				}
+
 				type = Convert::toValueType(tagName);
 
 				// if there is a space, there is either a named value or a '/'
@@ -131,12 +143,31 @@ namespace Exil
 					mStream.get(ch);
 
 				getTagName(tagName, ch);
-				type = Convert::toValueType(tagName);
+
+				// consume end tag
+				if(tagName.empty() && ch == '/')
+				{
+					while(!mStream.eof() && ch != '>')
+					{
+						mStream.get(ch);
+					}
+					return Pair(BLANK_STRING, NULL);
+					//continue;
+				}
+
+				try
+				{
+					type = Convert::toValueType(tagName);
+				}
+				catch(...)
+				{
+					return Pair(BLANK_STRING, new Value());
+				}
 
 				// if there is a space, there is either a named value or a '/'
 				if(ch == ' ')
 				{
-					while(!mStream.eof())
+					while(!mStream.eof() && ch != '>')
 					{
 						mStream.get(ch);
 						if(ch == '/')
@@ -161,9 +192,9 @@ namespace Exil
 				case Value::Types::Bool:
 					return Pair(nameValuePair.first, toBool(nameValuePair.second));
 				case Value::Types::Object:
-					return Pair(nameValuePair.first, parseObject());
+					return Pair(nameValuePair.second, parseObject());
 				case Value::Types::Array:
-					return Pair(nameValuePair.first, parseArray());
+					return Pair(nameValuePair.second, parseArray());
 				default:
 					return Pair(nameValuePair.first, new Value());
 				}
@@ -172,7 +203,7 @@ namespace Exil
 			return Pair(nameValuePair.first, new Value());
 		}
 
-		StringPair parseTagPair(char ch)
+		StringPair parseTagPair(char& ch)
 		{
 			String key;
 			String value;
@@ -186,7 +217,7 @@ namespace Exil
 			while(!mStream.eof() && !isalnum(ch))
 				mStream.get(ch);
 
-			while(!mStream.eof() && isalnum(ch))
+			while(!mStream.eof() && (isalnum(ch) || ch == '.'))
 			{
 				value.push_back(ch);
 				mStream.get(ch);
@@ -247,6 +278,8 @@ namespace Exil
 			while(!mStream.eof())
 			{
 				Pair pair = parseValuePair();
+				if(pair.first == "" && pair.second == NULL)
+					return obj;
 				obj->addValue(pair);
 			}
 			return obj;
@@ -259,6 +292,8 @@ namespace Exil
 			while(!mStream.eof())
 			{
 				Value* value = parseAnonymousValue();
+				if(value == NULL)
+					return arr;
 				arr->addValue(value);
 			}
 			return arr;
