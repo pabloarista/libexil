@@ -8,6 +8,8 @@
 
 #include <ExilXmlParser.h>
 
+#include <ExilBinStream.h>
+
 typedef std::string String;
 
 struct Vector3
@@ -139,8 +141,14 @@ int main()
 
 	std::stringstream ss;
 
-	Exil::XmlStream xml(ss);
-	Exil::XmlParser xparser(ss);
+	//Exil::XmlStream xml(ss);
+	//Exil::XmlParser xparser(ss);
+	Exil::BinStream bins(ss);
+
+	bins << player;
+
+	std::cin.get();
+/*
 
 	xml << player;
 	std::cout << ss.str() << std::endl;
@@ -152,6 +160,7 @@ int main()
 	Exil::JsonStream json(ss2, true);
 	json << val;
 	std::cout << ss2.str() << std::endl;
+	*/
 //	Player player2;
 //	json >> player2;
 
