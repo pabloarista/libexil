@@ -6,7 +6,7 @@
 namespace Exil
 {
 	XmlStream::XmlStream( std::iostream& stream )
-		: mStream(stream)
+		: mStream(stream), mParser(stream)
 	{
 
 	}

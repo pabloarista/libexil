@@ -1,14 +1,13 @@
 #include <iostream>
 #include <sstream>
-#include <ExilArray.h>
-#include <ExilObject.h>
-#include <ExilValue.h>
+
 #include <ExilXmlStream.h>
 #include <ExilJsonStream.h>
-
-#include <ExilXmlParser.h>
-
 #include <ExilBinStream.h>
+
+
+#include <windows.h>
+
 
 typedef std::string String;
 
@@ -124,6 +123,77 @@ namespace Exil
 
 };//namespace Exil
 
+const int TEST_LIMIT = 100000;
+
+template <class StreamType>
+void test(const Player& p)
+{
+	std::stringstream ss;
+	StreamType stream(ss);
+	LARGE_INTEGER startTime;
+	LARGE_INTEGER endTime;
+	LARGE_INTEGER ticksPerSecond;
+	QueryPerformanceFrequency(&ticksPerSecond);
+
+	QueryPerformanceCounter(&startTime);
+	std::cout << "Write test for: " << typeid(StreamType).name() << std::endl;
+	for(int i = 0; i < TEST_LIMIT; ++i)
+	{
+		stream << p;
+	}
+	QueryPerformanceCounter(&endTime);
+	std::cout << "Test took: " << 
+		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
+	std::cout << "Size was: " << ss.str().length() << std::endl;
+	//String str = ss.str();
+
+
+	Player p2;
+
+	QueryPerformanceCounter(&startTime);
+	std::cout << "Read test for: " << typeid(StreamType).name() << std::endl;
+	for(int i = 0; i < TEST_LIMIT; ++i)
+	{
+		stream >> p2;
+	}
+	QueryPerformanceCounter(&endTime);
+	std::cout << "Test took: " << 
+		(endTime.QuadPart - startTime.QuadPart) * 1000 / ticksPerSecond.QuadPart << std::endl;
+
+	std::cout << std::endl;
+}
+
+void testAlloc()
+{
+	LARGE_INTEGER startTime;
+	LARGE_INTEGER endTime;
+	LARGE_INTEGER ticksPerSecond;
+	QueryPerformanceFrequency(&ticksPerSecond);
+
+	QueryPerformanceCounter(&startTime);
+	std::cout << "Value allocation test" << std::endl;
+	Exil::ValueList list;
+	for(int i = 0; i < TEST_LIMIT * 10; ++i)
+	{
+		list.push_back(new Exil::Value("Testing!"));
+	}
+	QueryPerformanceCounter(&endTime);
+	std::cout << "Test took: " << 
+		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
+
+	QueryPerformanceCounter(&startTime);
+	std::cout << "Value Deletion Test" << std::endl;
+	Exil::ValueList::iterator iter = list.begin();
+	for(int i = 0; i < TEST_LIMIT * 10; ++i)
+	{
+		Exil::Value* v = *iter;
+		++iter;
+		delete v;
+	}
+	QueryPerformanceCounter(&endTime);
+	std::cout << "Test took: " << 
+		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
+}
 
 
 int main()
@@ -139,48 +209,10 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-	std::stringstream ss;
-
-	//Exil::XmlStream xml(ss);
-	//Exil::XmlParser xparser(ss);
-	Exil::BinStream bins(ss);
-
-	bins << player;
-
-	std::cin.get();
-/*
-
-	xml << player;
-	std::cout << ss.str() << std::endl;
-
-	Exil::Value* val = xparser.parseAnonymousValue();
-
-
-	std::stringstream ss2;
-	Exil::JsonStream json(ss2, true);
-	json << val;
-	std::cout << ss2.str() << std::endl;
-	*/
-//	Player player2;
-//	json >> player2;
-
-//	Exil::Value* value = json.get();
-//	std::stringstream ss2;
-//	Exil::XmlStream xml(ss2);
-//	xml << value;
-//	std::cout << ss2.str() << std::endl;
-
-	//std::cout << ss.str();
-
-	//Exil::JsonParser jparser(ss);
-
-	//Exil::Value* object = jparser.parseObject();
-
-	//std::cout << object;
-
-	//Exil::JsonStream jout(std::cout);
-
-	//jout << object;
+	test<Exil::XmlStream>(player);
+	test<Exil::JsonStream>(player);
+	test<Exil::BinStream>(player);
+	testAlloc();
 
 	std::cin.get();
 

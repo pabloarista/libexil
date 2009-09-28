@@ -192,6 +192,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ExilBinParser.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ExilBinStream.h"
 				>
 			</File>
@@ -229,6 +233,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\ExilArray.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\ExilBinParser.cpp"
 				>
 			</File>
 			<File

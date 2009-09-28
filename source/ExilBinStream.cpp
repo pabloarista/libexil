@@ -6,7 +6,7 @@
 namespace Exil
 {
 	BinStream::BinStream( std::iostream& stream )
-		: mStream(stream)
+		: mStream(stream), mParser(stream)
 	{
 
 	}
@@ -20,8 +20,8 @@ namespace Exil
 
 	void BinStream::_writeObject( Object* object )
 	{
-		mStream << Value::Types::Object;
-		mStream << object->values.size();
+		_writeType(Value::Types::Object);
+		_writeInt(object->values.size());
 		for(ValueMap::iterator iter = object->values.begin();
 			iter != object->values.end();)
 		{
@@ -32,8 +32,8 @@ namespace Exil
 
 	void BinStream::_writeArray( Array* list )
 	{
-		mStream << Value::Types::Object;
-		mStream << list->values.size();
+		_writeType(Value::Types::Array);
+		_writeInt(list->values.size());
 		for(ValueList::iterator iter = list->values.begin();
 			iter != list->values.end();
 			++iter)
@@ -59,25 +59,47 @@ namespace Exil
 			_writeObject(value->toObject());
 			break;
 		case Value::Types::String:
-			mStream << Value::Types::String;
+			_writeType(Value::Types::String);
 			_writeString(value->toString());
 			break;
 		case Value::Types::Number:
-			mStream << Value::Types::Number;
-			mStream << value->toNumber<float>();
+			_writeType(Value::Types::Number);
+			_writeFloat(value->toNumber<float>());
 			break;
 		case Value::Types::Bool:
-			mStream << Value::Types::Bool;
-			mStream << value->toBool();
+			_writeType(Value::Types::Bool);
+			_writeBool(value->toBool());
 			break;
 		case Value::Types::Null:
-			mStream << Value::Types::Null;
+			_writeType(Value::Types::Null);
 			break;
 		}
 	}
 
+
 	void BinStream::_writeString( const String& str )
 	{
-		mStream << str.size() << str.c_str();
+		_writeInt(str.size());
+		mStream.write(str.c_str(), str.length() * sizeof(char));
+	}
+
+	void BinStream::_writeInt( int number )
+	{
+		mStream.write(reinterpret_cast<char*>(&number), sizeof(int));
+	}
+
+	void BinStream::_writeBool( bool b )
+	{
+		mStream.write(reinterpret_cast<char*>(&b), sizeof(char));
+	}
+
+	void BinStream::_writeFloat( float number )
+	{
+		mStream.write(reinterpret_cast<char*>(&number), sizeof(float));
+	}
+
+	void BinStream::_writeType( Value::Type type )
+	{
+		mStream.write(reinterpret_cast<char*>(&type), sizeof(char));
 	}
 };//namespace Exil

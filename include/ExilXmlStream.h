@@ -2,6 +2,7 @@
 #define ExilXmlStream_h__
 
 #include <Exil.h>
+#include <ExilXmlParser.h>
 
 namespace Exil
 {
@@ -18,6 +19,15 @@ namespace Exil
 
 		XmlStream& operator<<(Value* value);
 
+		template <typename T>
+		XmlStream& operator>>(T& type)
+		{
+			Value* value = mParser.parseAnonymousValue();
+			type = TypeConversion<T>::convertFrom(value);
+			delete value;
+			return *this;
+		}
+
 		void _writeObject(Object* object, bool writeName = true, bool leadTab = true);
 
 		void _writeArray(Array* list, bool writeName = true, bool leadTab = true);
@@ -31,6 +41,7 @@ namespace Exil
 		void _decreaseTab();
 
 		std::iostream& mStream;
+		XmlParser mParser;
 		String mTabs;
 	};
 
