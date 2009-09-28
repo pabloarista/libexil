@@ -18,10 +18,17 @@ namespace Exil
 
 	Value::Value( String _string )
 	{
-		mType = Types::String;
-		mString = new char[_string.size() + 1];
-		strncpy(mString, _string.c_str(), _string.size());
-		mString[_string.size()] = 0;
+		_setString(_string.c_str(), _string.size());
+	}
+
+	Value::Value( const char* str )
+	{
+		_setString(str, strlen(str));
+	}
+
+	Value::Value( const char* str, size_t size )
+	{
+		_setString(str, size);
 	}
 
 	Value::Value( bool val )
@@ -39,6 +46,14 @@ namespace Exil
 	{
 		if(mType == Types::String)
 			delete mString;
+	}
+
+	void Value::_setString(const char* str, size_t size)
+	{
+		mType = Types::String;
+		mString = new char[size + 1];
+		strncpy(mString, str, size);
+		mString[size] = 0;
 	}
 
 	bool Value::isNull()

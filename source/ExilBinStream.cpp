@@ -14,7 +14,7 @@ namespace Exil
 	BinStream& BinStream::operator<<( Value* value )
 	{
 		_writeValue(value);
-		//delete value;
+		delete value;
 		return *this;
 	}
 

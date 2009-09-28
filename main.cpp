@@ -193,6 +193,8 @@ void testAlloc()
 	QueryPerformanceCounter(&endTime);
 	std::cout << "Test took: " << 
 		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
+
+	std::cout << std::endl;
 }
 
 
@@ -232,6 +234,46 @@ inline void optimalSerialize(std::stringstream& ss, Player& player)
 	}
 }
 
+inline void optimalDeserialize(std::stringstream& ss, Player& player)
+{
+	// read the name
+	int i(0);
+	ss.read(reinterpret_cast<char*>(&i), sizeof(int));
+	char* buff = new char[i + 1];
+	ss.read(buff, i * sizeof(char));
+	buff[i] = 0;
+	player.name = buff;
+	delete buff;
+
+	// write the id
+	ss.read(reinterpret_cast<char*>(&player.id), sizeof(int));
+
+	// write bools
+	ss.read(reinterpret_cast<char*>(&player.alive), sizeof(char));
+	ss.read(reinterpret_cast<char*>(&player.dead), sizeof(char));
+
+	// write position
+	ss.read(reinterpret_cast<char*>(&player.position.x), sizeof(float));
+	ss.read(reinterpret_cast<char*>(&player.position.y), sizeof(float));
+	ss.read(reinterpret_cast<char*>(&player.position.z), sizeof(float));
+
+	// write items
+	ss.read(reinterpret_cast<char*>(&i), sizeof(int));
+	int k = 0;
+	for(int j = 0; j < i; ++j)
+	{
+		Item item;
+		ss.read(reinterpret_cast<char*>(&k), sizeof(int));
+		buff = new char[k + 1];
+		ss.read(buff, k * sizeof(char));
+		buff[k] = 0;
+		item.name = buff;
+		delete buff;
+		ss.read(reinterpret_cast<char*>(&item.quantity), sizeof(int));
+		player.items.push_back(item);
+	}
+}
+
 void testOptimal(Player& player)
 {
 	std::stringstream ss;
@@ -256,7 +298,7 @@ void testOptimal(Player& player)
 	std::cout << "Read test for: Optimal" << std::endl;
 	for(int i = 0; i < TEST_LIMIT; ++i)
 	{
-		//stream >> p2;
+		optimalDeserialize(ss, p2);
 	}
 	QueryPerformanceCounter(&endTime);
 	std::cout << "Test took: " << 
@@ -278,8 +320,14 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-	test<Exil::XmlStream>(player);
 	test<Exil::JsonStream>(player);
+	test<Exil::XmlStream>(player);
+	test<Exil::BinStream>(player);
+	testOptimal(player);
+	testAlloc();
+
+	test<Exil::JsonStream>(player);
+	test<Exil::XmlStream>(player);
 	test<Exil::BinStream>(player);
 	testOptimal(player);
 	testAlloc();

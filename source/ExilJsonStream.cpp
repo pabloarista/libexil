@@ -14,7 +14,7 @@ namespace Exil
 	JsonStream& JsonStream::operator<<( Value* value )
 	{
 		_writeValue(value);
-		//delete value;
+		delete value;
 		return *this;
 	}
 

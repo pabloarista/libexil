@@ -28,6 +28,10 @@ namespace Exil
 		Value(int num);
 	
 		Value(String _string);
+
+		Value(const char* str);
+
+		Value(const char* str, size_t size);
 	
 		Value(bool val);
 	
@@ -64,6 +68,9 @@ namespace Exil
 		{
 			return mType;
 		}
+
+	private:
+		void _setString(const char* str, size_t size);
 
 	protected:
 		// data
