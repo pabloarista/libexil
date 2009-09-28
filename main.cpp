@@ -123,7 +123,7 @@ namespace Exil
 
 };//namespace Exil
 
-const int TEST_LIMIT = 100000;
+const int TEST_LIMIT = 1000;
 
 template <class StreamType>
 void test(const Player& p)
@@ -196,6 +196,75 @@ void testAlloc()
 }
 
 
+inline void optimalSerialize(std::stringstream& ss, Player& player)
+{
+	// write the name
+	int i;
+	i = player.name.size();
+	ss.write(reinterpret_cast<char*>(&i), sizeof(int));
+	ss.write(player.name.c_str(), player.name.size() * sizeof(char));
+
+	// write the id
+	ss.write(reinterpret_cast<char*>(&player.id), sizeof(int));
+
+	// write bools
+	ss.write(reinterpret_cast<char*>(&player.alive), sizeof(char));
+	ss.write(reinterpret_cast<char*>(&player.dead), sizeof(char));
+
+	// write position
+	ss.write(reinterpret_cast<char*>(&player.position.x), sizeof(float));
+	ss.write(reinterpret_cast<char*>(&player.position.y), sizeof(float));
+	ss.write(reinterpret_cast<char*>(&player.position.z), sizeof(float));
+
+	// write items
+	i = player.items.size();
+	ss.write(reinterpret_cast<char*>(&i), sizeof(int));
+	for(ItemList::iterator iter = player.items.begin();
+		iter != player.items.end();
+		++iter)
+	{
+		Item& item = *iter;
+		i = item.name.size();
+		ss.write(reinterpret_cast<char*>(&i), sizeof(int));
+		ss.write(item.name.c_str(), item.name.size() * sizeof(char));
+
+		ss.write(reinterpret_cast<char*>(&item.quantity), sizeof(int));
+	}
+}
+
+void testOptimal(Player& player)
+{
+	std::stringstream ss;
+	LARGE_INTEGER startTime;
+	LARGE_INTEGER endTime;
+	LARGE_INTEGER ticksPerSecond;
+	QueryPerformanceFrequency(&ticksPerSecond);
+
+	QueryPerformanceCounter(&startTime);
+	std::cout << "Write test for: Optimal" << std::endl;
+	for(int i = 0; i < TEST_LIMIT; ++i)
+	{
+		optimalSerialize(ss, player);
+	}
+	QueryPerformanceCounter(&endTime);
+	std::cout << "Test took: " << 
+		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
+	std::cout << "Size was: " << ss.str().length() << std::endl;
+
+	Player p2;
+	QueryPerformanceCounter(&startTime);
+	std::cout << "Read test for: Optimal" << std::endl;
+	for(int i = 0; i < TEST_LIMIT; ++i)
+	{
+		//stream >> p2;
+	}
+	QueryPerformanceCounter(&endTime);
+	std::cout << "Test took: " << 
+		(endTime.QuadPart - startTime.QuadPart) * 1000 / ticksPerSecond.QuadPart << std::endl;
+
+	std::cout << std::endl;
+}
+
 int main()
 {
 	Player player;
@@ -212,6 +281,7 @@ int main()
 	test<Exil::XmlStream>(player);
 	test<Exil::JsonStream>(player);
 	test<Exil::BinStream>(player);
+	testOptimal(player);
 	testAlloc();
 
 	std::cin.get();
