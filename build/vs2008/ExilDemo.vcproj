@@ -192,11 +192,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilBinParser.h"
+				RelativePath="..\..\include\ExilBinFormatter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilBinStream.h"
+				RelativePath="..\..\include\ExilBinParser.h"
 				>
 			</File>
 			<File
@@ -204,11 +204,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilJsonParser.h"
+				RelativePath="..\..\include\ExilJsonFormatter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilJsonStream.h"
+				RelativePath="..\..\include\ExilJsonParser.h"
 				>
 			</File>
 			<File
@@ -224,11 +224,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilXmlParser.h"
+				RelativePath="..\..\include\ExilXmlFormatter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilXmlStream.h"
+				RelativePath="..\..\include\ExilXmlParser.h"
 				>
 			</File>
 		</Filter>
@@ -244,19 +244,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\ExilBinFormatter.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\ExilBinParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\ExilBinStream.cpp"
+				RelativePath="..\..\source\ExilJsonFormatter.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\source\ExilJsonParser.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\ExilJsonStream.cpp"
 				>
 			</File>
 			<File
@@ -268,11 +268,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\ExilXmlParser.cpp"
+				RelativePath="..\..\source\ExilXmlFormatter.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\ExilXmlStream.cpp"
+				RelativePath="..\..\source\ExilXmlParser.cpp"
 				>
 			</File>
 		</Filter>

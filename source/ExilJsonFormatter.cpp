@@ -1,4 +1,4 @@
-#include <ExilJsonStream.h>
+#include <ExilJsonFormatter.h>
 #include <ExilValue.h>
 #include <ExilObject.h>
 #include <ExilArray.h>

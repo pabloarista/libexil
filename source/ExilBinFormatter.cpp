@@ -1,4 +1,4 @@
-#include <ExilBinStream.h>
+#include <ExilBinFormatter.h>
 #include <ExilValue.h>
 #include <ExilObject.h>
 #include <ExilArray.h>

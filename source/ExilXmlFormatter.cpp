@@ -1,4 +1,4 @@
-#include <ExilXmlStream.h>
+#include <ExilXmlFormatter.h>
 #include <ExilValue.h>
 #include <ExilObject.h>
 #include <ExilArray.h>

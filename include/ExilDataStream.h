@@ -50,6 +50,10 @@ namespace Exil
 
 	};
 
+	typedef DataStream<XmlParser, XmlFormatter> XmlStream;
+	typedef DataStream<JsonParser, JsonFormatter> JsonStream;
+	typedef DataStream<BinParser, BinFormatter> BinStream;
+
 };//namespace Exil
 
 #endif // ExilDataStream_h__

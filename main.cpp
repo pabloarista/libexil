@@ -1,11 +1,11 @@
 #include <iostream>
 #include <sstream>
 
-#include <ExilXmlStream.h>
+#include <ExilXmlFormatter.h>
 #include <ExilXmlParser.h>
-#include <ExilJsonStream.h>
+#include <ExilJsonFormatter.h>
 #include <ExilJsonParser.h>
-#include <ExilBinStream.h>
+#include <ExilBinFormatter.h>
 #include <ExilBinParser.h>
 #include <ExilTimer.h>
 #include <ExilDataStream.h>
@@ -297,22 +297,18 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-	typedef Exil::DataStream<Exil::BinParser, Exil::BinFormatter> BinDataStream;
-	typedef Exil::DataStream<Exil::JsonParser, Exil::JsonFormatter> JsonDataStream;
-	typedef Exil::DataStream<Exil::XmlParser, Exil::XmlFormatter> XmlDataStream;
-
-	test<JsonDataStream>(player);
-	test<XmlDataStream>(player);
-	test<BinDataStream>(player);
+	test<Exil::JsonStream>(player);
+	test<Exil::XmlStream>(player);
+	test<Exil::BinStream>(player);
 	testOptimal(player);
 	testAlloc();
 
-	test<JsonDataStream>(player);
-	test<XmlDataStream>(player);
-	test<BinDataStream>(player);
+	test<Exil::JsonStream>(player);
+	test<Exil::XmlStream>(player);
+	test<Exil::BinStream>(player);
 	testOptimal(player);
 	testAlloc();
-	//std::cin.get();
+	std::cin.get();
 
 	return 0;
 }
