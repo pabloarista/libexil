@@ -4,12 +4,10 @@
 #include <ExilXmlStream.h>
 #include <ExilJsonStream.h>
 #include <ExilBinStream.h>
+#include <ExilTimer.h>
+#include <ExilDataStream.h>
 
-
-#include <windows.h>
-
-
-typedef std::string String;
+typedef Exil::String String;
 
 struct Vector3
 {
@@ -123,6 +121,8 @@ namespace Exil
 
 };//namespace Exil
 
+#pragma region Tests
+
 const int TEST_LIMIT = 1000;
 
 template <class StreamType>
@@ -130,58 +130,43 @@ void test(const Player& p)
 {
 	std::stringstream ss;
 	StreamType stream(ss);
-	LARGE_INTEGER startTime;
-	LARGE_INTEGER endTime;
-	LARGE_INTEGER ticksPerSecond;
-	QueryPerformanceFrequency(&ticksPerSecond);
-
-	QueryPerformanceCounter(&startTime);
+	Exil::Timer timer;
+	timer.reset();
 	std::cout << "Write test for: " << typeid(StreamType).name() << std::endl;
 	for(int i = 0; i < TEST_LIMIT; ++i)
 	{
 		stream << p;
 	}
-	QueryPerformanceCounter(&endTime);
-	std::cout << "Test took: " << 
-		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
+	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 	std::cout << "Size was: " << ss.str().length() << std::endl;
 	//String str = ss.str();
 
 
 	Player p2;
 
-	QueryPerformanceCounter(&startTime);
+	timer.reset();
 	std::cout << "Read test for: " << typeid(StreamType).name() << std::endl;
 	for(int i = 0; i < TEST_LIMIT; ++i)
 	{
 		stream >> p2;
 	}
-	QueryPerformanceCounter(&endTime);
-	std::cout << "Test took: " << 
-		(endTime.QuadPart - startTime.QuadPart) * 1000 / ticksPerSecond.QuadPart << std::endl;
-
+	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 	std::cout << std::endl;
 }
 
 void testAlloc()
 {
-	LARGE_INTEGER startTime;
-	LARGE_INTEGER endTime;
-	LARGE_INTEGER ticksPerSecond;
-	QueryPerformanceFrequency(&ticksPerSecond);
-
-	QueryPerformanceCounter(&startTime);
+	Exil::Timer timer;
+	timer.reset();
 	std::cout << "Value allocation test" << std::endl;
 	Exil::ValueList list;
 	for(int i = 0; i < TEST_LIMIT * 10; ++i)
 	{
 		list.push_back(new Exil::Value("Testing!"));
 	}
-	QueryPerformanceCounter(&endTime);
-	std::cout << "Test took: " << 
-		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
+	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 
-	QueryPerformanceCounter(&startTime);
+	timer.reset();
 	std::cout << "Value Deletion Test" << std::endl;
 	Exil::ValueList::iterator iter = list.begin();
 	for(int i = 0; i < TEST_LIMIT * 10; ++i)
@@ -190,10 +175,7 @@ void testAlloc()
 		++iter;
 		delete v;
 	}
-	QueryPerformanceCounter(&endTime);
-	std::cout << "Test took: " << 
-		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
-
+	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 	std::cout << std::endl;
 }
 
@@ -277,35 +259,27 @@ inline void optimalDeserialize(std::stringstream& ss, Player& player)
 void testOptimal(Player& player)
 {
 	std::stringstream ss;
-	LARGE_INTEGER startTime;
-	LARGE_INTEGER endTime;
-	LARGE_INTEGER ticksPerSecond;
-	QueryPerformanceFrequency(&ticksPerSecond);
-
-	QueryPerformanceCounter(&startTime);
+	Exil::Timer timer;
+	timer.reset();
 	std::cout << "Write test for: Optimal" << std::endl;
 	for(int i = 0; i < TEST_LIMIT; ++i)
 	{
 		optimalSerialize(ss, player);
 	}
-	QueryPerformanceCounter(&endTime);
-	std::cout << "Test took: " << 
-		(endTime.QuadPart - startTime.QuadPart) * 1000/ ticksPerSecond.QuadPart << std::endl;
+	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 	std::cout << "Size was: " << ss.str().length() << std::endl;
 
 	Player p2;
-	QueryPerformanceCounter(&startTime);
+	timer.reset();
 	std::cout << "Read test for: Optimal" << std::endl;
 	for(int i = 0; i < TEST_LIMIT; ++i)
 	{
 		optimalDeserialize(ss, p2);
 	}
-	QueryPerformanceCounter(&endTime);
-	std::cout << "Test took: " << 
-		(endTime.QuadPart - startTime.QuadPart) * 1000 / ticksPerSecond.QuadPart << std::endl;
-
+	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 	std::cout << std::endl;
 }
+#pragma endregion Tests
 
 int main()
 {
@@ -320,18 +294,21 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-	test<Exil::JsonStream>(player);
-	test<Exil::XmlStream>(player);
-	test<Exil::BinStream>(player);
+	typedef Exil::DataStream<Exil::BinParser, Exil::BinStream> BinDataStream;
+	typedef Exil::DataStream<Exil::JsonParser, Exil::JsonStream> JsonDataStream;
+	typedef Exil::DataStream<Exil::XmlParser, Exil::XmlStream> XmlDataStream;
+
+	test<JsonDataStream>(player);
+	test<XmlDataStream>(player);
+	test<BinDataStream>(player);
 	testOptimal(player);
 	testAlloc();
 
-	test<Exil::JsonStream>(player);
-	test<Exil::XmlStream>(player);
-	test<Exil::BinStream>(player);
+	test<JsonDataStream>(player);
+	test<XmlDataStream>(player);
+	test<BinDataStream>(player);
 	testOptimal(player);
 	testAlloc();
-
 	std::cin.get();
 
 	return 0;

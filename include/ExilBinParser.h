@@ -21,7 +21,6 @@ namespace Exil
 		Value* parseBool();
 		int parseInt();
 
-
 	};//class BinParser
 
 };//namespace Exil

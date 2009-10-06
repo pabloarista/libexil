@@ -5,8 +5,8 @@
 
 namespace Exil
 {
-	BinStream::BinStream( std::iostream& stream )
-		: mStream(stream), mParser(stream)
+	BinStream::BinStream( std::ostream& stream )
+		: mStream(stream)//, mParser(stream)
 	{
 
 	}

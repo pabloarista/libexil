@@ -7,49 +7,6 @@
 #include <ExilArray.h>
 #include <cctype>
 
-/*
-typedef std::pair<String, String> StringPair;
-
-// gets anonymous node.
-parse:
-	char ch;
-	StringPair nameValuePair;
-	String tagName;
-	while(!eof)
-		get ch
-		getTagName(tagName, ch);
-
-		// if there is a space, there is either a named value or a '/'
-		if(ch != ' ')
-			while(!eof)
-				get ch
-				if(ch == '/')
-					// eat the '>'
-					mStream.get(ch);
-					break;
-				else if(isalnum(ch))
-					StringPair pair = parseTagPair(ch);
-					pair.second
-
-		switch(tagName)
-		{
-			case String:
-				return new Value(pair.second);
-			case Number:
-				return new Value(toNumber(pair.second));
-			case Bool:
-				return new Value(toBool(pair.second));
-			case Object:
-				return parseObject();
-			case Array:
-				return parseArray();
-			default:
-				return Value();
-		}
-
-*/
-
-
 namespace Exil
 {
 	class XmlParser
@@ -63,7 +20,7 @@ namespace Exil
 		{
 		}
 
-		Value* parseAnonymousValue()
+		Value* parseValue()
 		{
 			char ch;
 			StringPair nameValuePair;
@@ -291,7 +248,7 @@ namespace Exil
 
 			while(!mStream.eof())
 			{
-				Value* value = parseAnonymousValue();
+				Value* value = parseValue();
 				if(value == NULL)
 					return arr;
 				arr->addValue(value);

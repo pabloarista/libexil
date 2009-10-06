@@ -9,29 +9,9 @@ namespace Exil
 	class JsonStream
 	{
 	public:
-		JsonStream(std::iostream& stream, bool pretty = true);
-
-		template <typename T>
-		JsonStream& operator<<(T type)
-		{
-			return *this << TypeConversion<T>::convertTo(type);
-		}
+		JsonStream(std::ostream& stream, bool pretty = true);
 
 		JsonStream& operator<<(Value* value);
-
-		template <typename T>
-		JsonStream& operator>>(T& type)
-		{
-			Value* value = mParser.parseValue();
-			type = TypeConversion<T>::convertFrom(value);
-			delete value;
-			return *this;
-		}
-
-		Value* get()
-		{
-			return mParser.parseValue();
-		}
 
 		void _writeObject(Object* object, bool leadTab = true);
 
@@ -45,11 +25,10 @@ namespace Exil
 
 		void _decreaseTab();
 	
-		JsonParser mParser;
 		bool mPretty;
 		int mTabCount;
 		String mTabs;
-		std::iostream& mStream;
+		std::ostream& mStream;
 	};
 
 };//namespace Exil

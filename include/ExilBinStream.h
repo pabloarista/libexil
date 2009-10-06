@@ -10,24 +10,9 @@ namespace Exil
 	class BinStream
 	{
 	public:
-		BinStream(std::iostream& stream);
-
-		template <typename T>
-		BinStream& operator<<(T type)
-		{
-			return *this << TypeConversion<T>::convertTo(type);
-		}
+		BinStream(std::ostream& stream);
 
 		BinStream& operator<<(Value* value);
-
-		template <typename T>
-		BinStream& operator>>(T& type)
-		{
-			Value* value = mParser.parseValue();
-			type = TypeConversion<T>::convertFrom(value);
-			delete value;
-			return *this;
-		}
 
 		void _writeObject(Object* object);
 
@@ -44,8 +29,7 @@ namespace Exil
 		void _writeFloat(float number);
 		void _writeType(Value::Type type);
 
-		std::iostream& mStream;
-		BinParser mParser;
+		std::ostream& mStream;
 	};
 
 };//namespace Exil

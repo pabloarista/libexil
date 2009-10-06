@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ExilDataStream.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ExilJsonParser.h"
 				>
 			</File>
@@ -209,6 +213,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\ExilObject.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\ExilTimer.h"
 				>
 			</File>
 			<File

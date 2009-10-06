@@ -9,24 +9,9 @@ namespace Exil
 	class XmlStream
 	{
 	public:
-		XmlStream(std::iostream& stream);
-
-		template <typename T>
-		XmlStream& operator<<(T type)
-		{
-			return *this << TypeConversion<T>::convertTo(type);
-		}
+		XmlStream(std::ostream& stream);
 
 		XmlStream& operator<<(Value* value);
-
-		template <typename T>
-		XmlStream& operator>>(T& type)
-		{
-			Value* value = mParser.parseAnonymousValue();
-			type = TypeConversion<T>::convertFrom(value);
-			delete value;
-			return *this;
-		}
 
 		void _writeObject(Object* object, bool writeName = true, bool leadTab = true);
 
@@ -40,8 +25,7 @@ namespace Exil
 
 		void _decreaseTab();
 
-		std::iostream& mStream;
-		XmlParser mParser;
+		std::ostream& mStream;
 		String mTabs;
 	};
 

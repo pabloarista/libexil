@@ -5,8 +5,8 @@
 
 namespace Exil
 {
-	JsonStream::JsonStream( std::iostream& stream, bool pretty )
-		: mStream(stream), mPretty(pretty), mTabCount(0), mParser(stream)
+	JsonStream::JsonStream( std::ostream& stream, bool pretty )
+		: mStream(stream), mPretty(pretty), mTabCount(0)
 	{
 
 	}
