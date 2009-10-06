@@ -1,18 +1,17 @@
-#ifndef ExilBinStream_h__
-#define ExilBinStream_h__
+#ifndef ExilBinFormatter_h__
+#define ExilBinFormatter_h__
 
 #include <Exil.h>
 #include <ExilValue.h>
-#include <ExilBinParser.h>
 
 namespace Exil
 {
-	class BinStream
+	class BinFormatter
 	{
 	public:
-		BinStream(std::ostream& stream);
+		BinFormatter(std::ostream& stream);
 
-		BinStream& operator<<(Value* value);
+		BinFormatter& operator<<(Value* value);
 
 		void _writeObject(Object* object);
 
@@ -34,4 +33,4 @@ namespace Exil
 
 };//namespace Exil
 
-#endif // ExilBinStream_h__
+#endif // ExilBinFormatter_h__

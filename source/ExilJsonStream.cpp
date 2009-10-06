@@ -5,20 +5,20 @@
 
 namespace Exil
 {
-	JsonStream::JsonStream( std::ostream& stream, bool pretty )
+	JsonFormatter::JsonFormatter( std::ostream& stream, bool pretty )
 		: mStream(stream), mPretty(pretty), mTabCount(0)
 	{
 
 	}
 
-	JsonStream& JsonStream::operator<<( Value* value )
+	JsonFormatter& JsonFormatter::operator<<( Value* value )
 	{
 		_writeValue(value);
 		delete value;
 		return *this;
 	}
 
-	void JsonStream::_writeObject( Object* object, bool leadTab /*= true*/ )
+	void JsonFormatter::_writeObject( Object* object, bool leadTab /*= true*/ )
 	{
 		mStream << (leadTab?mTabs:BLANK_STRING) << "{";
 		_increaseTab();
@@ -37,7 +37,7 @@ namespace Exil
 		mStream << mTabs << "}";
 	}
 
-	void JsonStream::_writeArray( Array* list, bool leadTab /*= true*/ )
+	void JsonFormatter::_writeArray( Array* list, bool leadTab /*= true*/ )
 	{
 		mStream << (leadTab?mTabs:BLANK_STRING) << "[";
 		_increaseTab();
@@ -56,13 +56,13 @@ namespace Exil
 		mStream << mTabs << "]";
 	}
 
-	void JsonStream::_writePair( const String& name, Value* value, bool comma /*= true*/ )
+	void JsonFormatter::_writePair( const String& name, Value* value, bool comma /*= true*/ )
 	{
 		mStream << mTabs << "\"" << name << "\" : ";
 		_writeValue(value, comma, false);
 	}
 
-	void JsonStream::_writeValue( Value* value, bool comma /*= false*/, bool leadTab /*= true*/ )
+	void JsonFormatter::_writeValue( Value* value, bool comma /*= false*/, bool leadTab /*= true*/ )
 	{
 		switch(value->type())
 		{
@@ -96,7 +96,7 @@ namespace Exil
 			mStream << std::endl;
 	}
 
-	void JsonStream::_increaseTab()
+	void JsonFormatter::_increaseTab()
 	{
 		if(!mPretty)
 			return;
@@ -104,7 +104,7 @@ namespace Exil
 		mTabs += '\t';
 	}
 
-	void JsonStream::_decreaseTab()
+	void JsonFormatter::_decreaseTab()
 	{
 		if(!mPretty)
 			return;

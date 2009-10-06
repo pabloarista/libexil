@@ -2,8 +2,11 @@
 #include <sstream>
 
 #include <ExilXmlStream.h>
+#include <ExilXmlParser.h>
 #include <ExilJsonStream.h>
+#include <ExilJsonParser.h>
 #include <ExilBinStream.h>
+#include <ExilBinParser.h>
 #include <ExilTimer.h>
 #include <ExilDataStream.h>
 
@@ -123,7 +126,7 @@ namespace Exil
 
 #pragma region Tests
 
-const int TEST_LIMIT = 1000;
+const int TEST_LIMIT = 10000;
 
 template <class StreamType>
 void test(const Player& p)
@@ -294,9 +297,9 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-	typedef Exil::DataStream<Exil::BinParser, Exil::BinStream> BinDataStream;
-	typedef Exil::DataStream<Exil::JsonParser, Exil::JsonStream> JsonDataStream;
-	typedef Exil::DataStream<Exil::XmlParser, Exil::XmlStream> XmlDataStream;
+	typedef Exil::DataStream<Exil::BinParser, Exil::BinFormatter> BinDataStream;
+	typedef Exil::DataStream<Exil::JsonParser, Exil::JsonFormatter> JsonDataStream;
+	typedef Exil::DataStream<Exil::XmlParser, Exil::XmlFormatter> XmlDataStream;
 
 	test<JsonDataStream>(player);
 	test<XmlDataStream>(player);
@@ -309,7 +312,7 @@ int main()
 	test<BinDataStream>(player);
 	testOptimal(player);
 	testAlloc();
-	std::cin.get();
+	//std::cin.get();
 
 	return 0;
 }

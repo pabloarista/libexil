@@ -1,17 +1,16 @@
-#ifndef ExilJsonStream_h__
-#define ExilJsonStream_h__
+#ifndef ExilJsonFormatter_h__
+#define ExilJsonFormatter_h__
 
 #include <Exil.h>
-#include <ExilJsonParser.h>
 
 namespace Exil
 {
-	class JsonStream
+	class JsonFormatter
 	{
 	public:
-		JsonStream(std::ostream& stream, bool pretty = true);
+		JsonFormatter(std::ostream& stream, bool pretty = true);
 
-		JsonStream& operator<<(Value* value);
+		JsonFormatter& operator<<(Value* value);
 
 		void _writeObject(Object* object, bool leadTab = true);
 
@@ -33,4 +32,4 @@ namespace Exil
 
 };//namespace Exil
 
-#endif // ExilJsonStream_h__
+#endif // ExilJsonFormatter_h__

@@ -1,17 +1,16 @@
-#ifndef ExilXmlStream_h__
-#define ExilXmlStream_h__
+#ifndef ExilXmlFormatter_h__
+#define ExilXmlFormatter_h__
 
 #include <Exil.h>
-#include <ExilXmlParser.h>
 
 namespace Exil
 {
-	class XmlStream
+	class XmlFormatter
 	{
 	public:
-		XmlStream(std::ostream& stream);
+		XmlFormatter(std::ostream& stream);
 
-		XmlStream& operator<<(Value* value);
+		XmlFormatter& operator<<(Value* value);
 
 		void _writeObject(Object* object, bool writeName = true, bool leadTab = true);
 
@@ -31,4 +30,4 @@ namespace Exil
 
 };//namespace Exil
 
-#endif // ExilXmlStream_h__
+#endif // ExilXmlFormatter_h__

@@ -5,20 +5,20 @@
 
 namespace Exil
 {
-	XmlStream::XmlStream( std::ostream& stream )
+	XmlFormatter::XmlFormatter( std::ostream& stream )
 		: mStream(stream)
 	{
 
 	}
 
-	XmlStream& XmlStream::operator<<( Value* value )
+	XmlFormatter& XmlFormatter::operator<<( Value* value )
 	{
 		_writeValue(value);
 		delete value;
 		return *this;
 	}
 
-	void XmlStream::_writeObject( Object* object, bool writeName /*= true*/, bool leadTab /*= true*/ )
+	void XmlFormatter::_writeObject( Object* object, bool writeName /*= true*/, bool leadTab /*= true*/ )
 	{
 		if(writeName)
 			mStream << (leadTab?mTabs:BLANK_STRING) << "<Object>" << std::endl;
@@ -35,7 +35,7 @@ namespace Exil
 		mStream << mTabs << "</Object>" << std::endl;
 	}
 
-	void XmlStream::_writeArray( Array* list, bool writeName /*= true*/, bool leadTab /*= true*/ )
+	void XmlFormatter::_writeArray( Array* list, bool writeName /*= true*/, bool leadTab /*= true*/ )
 	{
 		if(writeName)
 			mStream << (leadTab?mTabs:BLANK_STRING) << "<Array>" << std::endl;
@@ -52,7 +52,7 @@ namespace Exil
 		mStream << mTabs << "</Array>" << std::endl;
 	}
 
-	void XmlStream::_writePair( const String& name, Value* value )
+	void XmlFormatter::_writePair( const String& name, Value* value )
 	{
 		if(value->type() == Value::Types::Array || value->type() == Value::Types::Object)
 		{
@@ -73,7 +73,7 @@ namespace Exil
 		}
 	}
 
-	void XmlStream::_writeValue( Value* value, bool writeName /*= true*/, bool leadTab /*= true*/ )
+	void XmlFormatter::_writeValue( Value* value, bool writeName /*= true*/, bool leadTab /*= true*/ )
 	{
 		switch(value->type())
 		{
@@ -101,12 +101,12 @@ namespace Exil
 		}
 	}
 
-	void XmlStream::_increaseTab()
+	void XmlFormatter::_increaseTab()
 	{
 		mTabs += '\t';
 	}
 
-	void XmlStream::_decreaseTab()
+	void XmlFormatter::_decreaseTab()
 	{
 		if(mTabs.empty())
 			return;

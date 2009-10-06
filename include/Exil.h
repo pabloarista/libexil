@@ -28,9 +28,9 @@ namespace Exil
 	class Value;
 	class Object;
 	class Array;
-	class JsonStream;
+	class JsonFormatter;
 	class JsonParser;
-	class XmlStream;
+	class XmlFormatter;
 	class XmlParser;
 	typedef std::pair<String, Value*> Pair;
 	typedef std::map<String, Value*> ValueMap;

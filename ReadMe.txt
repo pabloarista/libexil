@@ -1,7 +1,6 @@
 TODO:
 * Comments!
-* Parser for XML
-* Stream for binary
+* Parsers should support negative numbers
 * Stream for (optimized) binary
 * Stream for gzip'd binary
 * Move data in Value/Object/Array to private
