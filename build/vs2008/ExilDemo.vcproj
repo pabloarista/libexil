@@ -252,6 +252,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\ExilDataStream.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\ExilJsonFormatter.cpp"
 				>
 			</File>

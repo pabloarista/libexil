@@ -5,7 +5,7 @@
 
 namespace Exil
 {
-	class XmlFormatter
+	class XmlFormatter : public Formatter
 	{
 	public:
 		XmlFormatter(std::ostream& stream);
@@ -24,7 +24,6 @@ namespace Exil
 
 		void _decreaseTab();
 
-		std::ostream& mStream;
 		String mTabs;
 	};
 

@@ -6,7 +6,7 @@
 namespace Exil
 {
 	BinFormatter::BinFormatter( std::ostream& stream )
-		: mStream(stream)
+		: Formatter(stream)
 	{
 
 	}

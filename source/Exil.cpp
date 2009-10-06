@@ -1,4 +1,5 @@
 #include <Exil.h>
+#include <ExilJsonFormatter.h>
 
 namespace Exil
 {

@@ -2,14 +2,47 @@
 #define ExilDataStream_h__
 
 #include <Exil.h>
-#include <istream>
-#include <ostream>
 #include <iostream>
+
+#include <ExilJsonFormatter.h>
+#include <ExilBinFormatter.h>
+#include <ExilXmlFormatter.h>
+
+#include <ExilJsonParser.h>
+#include <ExilBinParser.h>
+#include <ExilXmlParser.h>
 
 namespace Exil
 {
-	class DefaultParserPolicy {};
-	class DefaultFormatterPolicy {};
+	struct NullIStream: 
+		std::istream { 
+			NullIStream(): std::ios(0), std::istream(0) {} 
+	}; 
+	extern NullIStream NullIn;
+
+	struct NullOStream: 
+		std::ostream { 
+			NullOStream(): std::ios(0), std::ostream(0) {} 
+	}; 
+	extern NullOStream NullOut;
+
+	typedef JsonFormatter DefaultFormatterPolicy;
+	typedef JsonParser DefaultParserPolicy;
+
+	class EmptyParserPolicy
+	{
+	public:
+		EmptyParserPolicy(std::istream&) {}
+		Value* getValue() { return NULL; }
+	};
+
+	class EmptyFormatterPolicy
+	{
+	public:
+		EmptyFormatterPolicy(std::ostream&) {}
+		EmptyFormatterPolicy& operator<<(Value* value) { return *this; }
+
+	};
 
 	template <
 		class ParserPolicy = DefaultParserPolicy,
@@ -29,6 +62,12 @@ namespace Exil
 			: mParser(stream), mFormatter(stream)
 		{}
 
+		DataStream& operator<<(Value* value)
+		{
+			mFormatter << value;
+			return *this;
+		}
+
 		template <typename T>
 		DataStream& operator<<(T type)
 		{
@@ -47,12 +86,14 @@ namespace Exil
 
 		ParserPolicy mParser;
 		FormatterPolicy mFormatter;
-
 	};
 
 	typedef DataStream<XmlParser, XmlFormatter> XmlStream;
 	typedef DataStream<JsonParser, JsonFormatter> JsonStream;
 	typedef DataStream<BinParser, BinFormatter> BinStream;
+
+	typedef Exil::DataStream<Exil::EmptyParserPolicy, Exil::JsonFormatter> DSOutType;
+	extern DSOutType dsout;
 
 };//namespace Exil
 

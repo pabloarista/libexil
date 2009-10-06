@@ -40,7 +40,7 @@ namespace Exil
 		ValueMap values;
 	};
 
-	std::ostream& operator<< (std::ostream& os, Object* val);
+	//std::ostream& operator<< (std::ostream& os, Object* val);
 };
 
 

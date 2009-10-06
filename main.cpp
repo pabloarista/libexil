@@ -1,14 +1,16 @@
 #include <iostream>
 #include <sstream>
 
-#include <ExilXmlFormatter.h>
-#include <ExilXmlParser.h>
-#include <ExilJsonFormatter.h>
-#include <ExilJsonParser.h>
-#include <ExilBinFormatter.h>
-#include <ExilBinParser.h>
-#include <ExilTimer.h>
+/// DataStream definitions
 #include <ExilDataStream.h>
+
+/// basic types
+#include <ExilValue.h>
+#include <ExilObject.h>
+#include <ExilArray.h>
+
+/// only needed for tests
+#include <ExilTimer.h>
 
 typedef Exil::String String;
 
@@ -297,17 +299,23 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-	test<Exil::JsonStream>(player);
-	test<Exil::XmlStream>(player);
-	test<Exil::BinStream>(player);
-	testOptimal(player);
-	testAlloc();
+	Exil::dsout << player;
 
+	/*
+	/// Performance tests
 	test<Exil::JsonStream>(player);
 	test<Exil::XmlStream>(player);
 	test<Exil::BinStream>(player);
 	testOptimal(player);
 	testAlloc();
+	/// Second pass
+	test<Exil::JsonStream>(player);
+	test<Exil::XmlStream>(player);
+	test<Exil::BinStream>(player);
+	testOptimal(player);
+	testAlloc();
+	*/
+
 	std::cin.get();
 
 	return 0;

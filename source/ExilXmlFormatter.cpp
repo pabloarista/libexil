@@ -6,7 +6,7 @@
 namespace Exil
 {
 	XmlFormatter::XmlFormatter( std::ostream& stream )
-		: mStream(stream)
+		: Formatter(stream)
 	{
 
 	}

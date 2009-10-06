@@ -5,7 +5,7 @@
 
 namespace Exil
 {
-	class JsonFormatter
+	class JsonFormatter : public Formatter
 	{
 	public:
 		JsonFormatter(std::ostream& stream, bool pretty = true);
@@ -27,7 +27,6 @@ namespace Exil
 		bool mPretty;
 		int mTabCount;
 		String mTabs;
-		std::ostream& mStream;
 	};
 
 };//namespace Exil

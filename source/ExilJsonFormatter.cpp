@@ -6,7 +6,7 @@
 namespace Exil
 {
 	JsonFormatter::JsonFormatter( std::ostream& stream, bool pretty )
-		: mStream(stream), mPretty(pretty), mTabCount(0)
+		: Formatter(stream), mPretty(pretty), mTabCount(0)
 	{
 
 	}

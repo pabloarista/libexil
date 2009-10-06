@@ -6,7 +6,7 @@
 
 namespace Exil
 {
-	class BinFormatter
+	class BinFormatter : public Formatter
 	{
 	public:
 		BinFormatter(std::ostream& stream);
@@ -27,8 +27,6 @@ namespace Exil
 		void _writeInt(int number);
 		void _writeFloat(float number);
 		void _writeType(Value::Type type);
-
-		std::ostream& mStream;
 	};
 
 };//namespace Exil

@@ -1,5 +1,6 @@
 #include <ExilArray.h>
 #include <ExilObject.h>
+#include <ExilDataStream.h>
 
 namespace Exil
 {
@@ -23,20 +24,22 @@ namespace Exil
 		values.push_back(value);
 	}
 
-	std::ostream& operator<< (std::ostream& os, Array* val)
-	{
-		os << "[" << std::endl;
+	//std::ostream& operator<< (std::ostream& os, Array* val)
+	//{
+	//	dsout << val;
 
-		for(ValueList::iterator iter = val->values.begin();
-			iter != val->values.end();
-			++iter)
-		{
-			os << *iter << std::endl;
-		}
+	//	//os << "[" << std::endl;
 
-		os << "]" << std::endl;
-		return os;
-	}	
+	//	//for(ValueList::iterator iter = val->values.begin();
+	//	//	iter != val->values.end();
+	//	//	++iter)
+	//	//{
+	//	//	os << *iter << std::endl;
+	//	//}
+
+	//	//os << "]" << std::endl;
+	//	return os;
+	//}	
 
 };
 

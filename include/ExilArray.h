@@ -23,7 +23,7 @@ namespace Exil
 		ValueList values;
 	};
 
-	std::ostream& operator<< (std::ostream& os, Array* val);
+	//std::ostream& operator<< (std::ostream& os, Array* val);
 
 #pragma region Conversion Methods
 	template<typename T>

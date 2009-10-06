@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <exception>
+#include <iostream>
 
 namespace Exil
 {
@@ -54,6 +55,18 @@ namespace Exil
 		static Value* convertTo(T);
 
 		static T convertFrom(Value*);
+	};
+
+	class Formatter
+	{
+	public:
+		Formatter(std::ostream& stream)
+			: mStream(stream)
+		{}
+
+		virtual Formatter& operator<<(Value* value) = 0;
+
+		std::ostream& mStream;
 	};
 
 };//namespace Exil

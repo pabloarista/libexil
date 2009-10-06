@@ -1,5 +1,6 @@
 #include <ExilObject.h>
 #include <ExilArray.h>
+#include <ExilDataStream.h>
 
 namespace Exil
 {
@@ -43,19 +44,20 @@ namespace Exil
 		return NULL;
 	}
 
-	std::ostream& operator<< (std::ostream& os, Object* val)
-	{
-		os << "{" << std::endl;
+	//std::ostream& operator<< (std::ostream& os, Object* val)
+	//{
+	//	dsout << val;
+	//	//os << "{" << std::endl;
 
-		for(ValueMap::iterator iter = val->values.begin();
-			iter != val->values.end();
-			++iter)
-		{
-			os << "\"" << iter->first << "\" = " << iter->second << std::endl;
-		}
+	//	//for(ValueMap::iterator iter = val->values.begin();
+	//	//	iter != val->values.end();
+	//	//	++iter)
+	//	//{
+	//	//	os << "\"" << iter->first << "\" = " << iter->second << std::endl;
+	//	//}
 
-		os << "}" << std::endl;
-		return os;
-	}
+	//	//os << "}" << std::endl;
+	//	return os;
+	//}
 
 };//namespace Exil

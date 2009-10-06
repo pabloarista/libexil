@@ -1,6 +1,7 @@
 #include <ExilValue.h>
 #include <ExilArray.h>
 #include <ExilObject.h>
+#include <ExilDataStream.h>
 
 namespace Exil
 {
@@ -89,32 +90,34 @@ namespace Exil
 
 		return static_cast<Array*>(this);
 	}
+
 	std::ostream& operator<< (std::ostream& os, Value* val)
 	{
-		switch(val->type())
-		{
-		case Value::Types::Number:
-			os << "Number(" << val->toNumber<float>() << ")" << std::endl;
-			break;
-		case Value::Types::String:
-			os << "String(" << val->toString() << ")" <<  std::endl;
-			break;
-		case Value::Types::Bool:
-			if(val->toBool())
-				os << "True" << std::endl;
-			else
-				os << "False" << std::endl;
-			break;
-		case Value::Types::Null:
-			os << "Null" << std::endl;
-			break;
-		case Value::Types::Object:
-			os << val->toObject() << std::endl;
-			break;
-		case Value::Types::Array:
-			os << val->toArray() << std::endl;
-			break;
-		}
+		dsout << val;
+		//switch(val->type())
+		//{
+		//case Value::Types::Number:
+		//	os << "Number(" << val->toNumber<float>() << ")" << std::endl;
+		//	break;
+		//case Value::Types::String:
+		//	os << "String(" << val->toString() << ")" <<  std::endl;
+		//	break;
+		//case Value::Types::Bool:
+		//	if(val->toBool())
+		//		os << "True" << std::endl;
+		//	else
+		//		os << "False" << std::endl;
+		//	break;
+		//case Value::Types::Null:
+		//	os << "Null" << std::endl;
+		//	break;
+		//case Value::Types::Object:
+		//	os << val->toObject() << std::endl;
+		//	break;
+		//case Value::Types::Array:
+		//	os << val->toArray() << std::endl;
+		//	break;
+		//}
 		return os;
 	}
 
