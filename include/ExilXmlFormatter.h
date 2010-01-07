@@ -2,6 +2,7 @@
 #define ExilXmlFormatter_h__
 
 #include <Exil.h>
+#ifdef UPGRADE_COMPLETE
 
 namespace Exil
 {
@@ -28,5 +29,5 @@ namespace Exil
 	};
 
 };//namespace Exil
-
+#endif
 #endif // ExilXmlFormatter_h__

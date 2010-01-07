@@ -14,8 +14,8 @@
 
 namespace Exil
 {
-	typedef std::string String;
-	const String BLANK_STRING;
+	//typedef std::string String;
+	const std::string BLANK_STRING;
 	typedef char int8_t;
 	typedef short int16_t;
 	typedef long int32_t;
@@ -25,22 +25,49 @@ namespace Exil
 	typedef unsigned long uint32_t;
 	typedef unsigned long long uint64_t;
 	typedef float real_t;
+	typedef uint16_t SizeT;
 
-	class Value;
+	namespace Types
+	{
+		enum Type
+		{
+			Nothing = 0,
+			Object = 1,
+			Array = 2,
+			String = 3,
+			Float = 4,
+			Integer = 5,
+			Boolean = 6,
+			Null = 7
+		};
+	};
+	typedef Types::Type Type;
+	typedef unsigned char InternalType;
+
+	// Base types
 	class Object;
 	class Array;
-	class JsonFormatter;
-	class JsonParser;
-	class XmlFormatter;
-	class XmlParser;
-	typedef std::pair<String, Value*> Pair;
-	typedef std::map<String, Value*> ValueMap;
-	typedef std::list<Value*> ValueList;
+	class Integer;
+	class String;
+	class Float;
+	class Boolean;
+
+	// Basic reader/writer
+	class Reader;
+	class Writer;
+
+	//class JsonFormatter;
+	//class JsonParser;
+	//class XmlFormatter;
+	//class XmlParser;
+	//typedef std::pair<String, Value*> Pair;
+	//typedef std::map<String, Value*> ValueMap;
+	//typedef std::list<Value*> ValueList;
 
 	class Exception : public std::runtime_error
 	{
 	public:
-		Exception(const String& message);
+		Exception(const std::string& message);
 	};
 
 	class ConversionException : public Exception
@@ -50,13 +77,24 @@ namespace Exil
 	};
 
 	template <typename T>
-	struct TypeConversion
+	struct ConvertType
 	{
-		static Value* convertTo(T);
+		static void To(T& t, Writer& writer)
+		{
+			writer.write(t);
+		}
 
-		static T convertFrom(Value*);
+		static void From(T& t, Reader& reader)
+		{
+			reader.read(t);
+		}
 	};
 
+	SizeT GetSize(const char* ptr);
+
+	Type GetType(const char* ptr);
+
+	/*
 	class Formatter
 	{
 	public:
@@ -68,6 +106,7 @@ namespace Exil
 
 		std::ostream& mStream;
 	};
+	*/
 
 };//namespace Exil
 

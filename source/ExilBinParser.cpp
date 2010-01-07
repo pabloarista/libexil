@@ -3,6 +3,8 @@
 #include <ExilArray.h>
 #include <ExilObject.h>
 
+#ifdef UPGRADE_COMPLETE
+
 namespace Exil
 {
 	BinParser::BinParser( std::istream& stream ) 
@@ -97,3 +99,4 @@ namespace Exil
 		return i;
 	}
 };//namespace Exil
+#endif

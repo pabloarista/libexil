@@ -3,6 +3,7 @@
 #include <ExilObject.h>
 #include <ExilArray.h>
 
+#ifdef UPGRADE_COMPLETE
 namespace Exil
 {
 	XmlFormatter::XmlFormatter( std::ostream& stream )
@@ -113,3 +114,4 @@ namespace Exil
 		mTabs.erase(mTabs.size() - 1, 1);
 	}
 };//namespace Exil
+#endif

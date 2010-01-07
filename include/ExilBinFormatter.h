@@ -3,6 +3,7 @@
 
 #include <Exil.h>
 #include <ExilValue.h>
+#ifdef UPGRADE_COMPLETE
 
 namespace Exil
 {
@@ -30,5 +31,5 @@ namespace Exil
 	};
 
 };//namespace Exil
-
+#endif
 #endif // ExilBinFormatter_h__

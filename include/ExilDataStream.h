@@ -12,6 +12,8 @@
 #include <ExilBinParser.h>
 #include <ExilXmlParser.h>
 
+#ifdef UPGRADE_COMPLETE
+
 namespace Exil
 {
 	struct NullIStream: 
@@ -96,5 +98,7 @@ namespace Exil
 	extern DSOutType dsout;
 
 };//namespace Exil
+
+#endif
 
 #endif // ExilDataStream_h__

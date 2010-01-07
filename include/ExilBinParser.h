@@ -2,6 +2,7 @@
 #define ExilBinParser_h__
 
 #include <Exil.h>
+#ifdef UPGRADE_COMPLETE
 
 namespace Exil
 {
@@ -24,5 +25,5 @@ namespace Exil
 	};//class BinParser
 
 };//namespace Exil
-
+#endif
 #endif // ExilBinParser_h__

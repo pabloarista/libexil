@@ -8,6 +8,8 @@
 #include <ExilValue.h>
 #include <ExilObject.h>
 #include <ExilArray.h>
+#include <ExilReader.h>
+#include <ExilWriter.h>
 
 /// only needed for tests
 #include <ExilTimer.h>
@@ -24,10 +26,10 @@ struct Vector3
 
 struct Item
 {
-	Item(const String& n = Exil::BLANK_STRING, int q = 0)
+	Item(const std::string& n = Exil::BLANK_STRING, int q = 0)
 		: name(n), quantity(q)
 	{}
-	String name;
+	std::string name;
 	int quantity;
 };
 
@@ -35,7 +37,7 @@ typedef std::list<Item> ItemList;
 
 struct Player
 {
-	String name;
+	std::string name;
 	int id;
 	Vector3 position;
 	ItemList items;
@@ -45,82 +47,67 @@ struct Player
 
 namespace Exil
 {
-	template<>
-	struct TypeConversion<Vector3>
+	template <>
+	struct ConvertType<Vector3>
 	{
-		static Value* convertTo(Vector3 vec)
+		static void To(Vector3& t, Writer& writer)
 		{
-			Object* object = new Object;
-			object->addValue("x", vec.x);
-			object->addValue("y", vec.y);
-			object->addValue("z", vec.z);
-
-			return object;
+			writer.CreateObject()
+				.set("x",t.x)
+				.set("y",t.y)
+				.set("z",t.z);
 		}
 
-		static Vector3 convertFrom(Value* value)
+		static void From(Vector3& t, Reader& reader)
 		{
-			Object* object = value->toObject();
-
-			Vector3 vec;
-			vec.x = object->getValue<float>("x");
-			vec.y = object->getValue<float>("y");
-			vec.z = object->getValue<float>("z");
-
-			return vec;
+			reader.CreateObject()
+				.get("x", t.x)
+				.get("y", t.y)
+				.get("z", t.z);
 		}
 	};
 
-	template<>
-	struct TypeConversion<Item>
+	template <>
+	struct ConvertType<Item>
 	{
-		static Value* convertTo(Item item)
+		static void To(Item& t, Writer& writer)
 		{
-			Object* object = new Object;
-			object->addValue("name", item.name);
-			object->addValue("quantity", item.quantity);
-			return object;
+			writer.CreateObject()
+				.set("name",t.name)
+				.set("quantity",t.quantity);
 		}
 
-		static Item convertFrom(Value* value)
+		static void From(Item& t, Reader& reader)
 		{
-			Object* object = value->toObject();
-
-			Item item;
-			item.name = object->getValue<String>("name");
-			item.quantity = object->getValue<int>("quantity");
-			return item;
+			reader.CreateObject()
+				.get("name", t.name)
+				.get("quantity", t.quantity);
 		}
 	};
 
-	template<>
-	struct TypeConversion<Player>
+	template <>
+	struct ConvertType<Player>
 	{
-		static Value* convertTo(Player player)
+		static void To(Player& t, Writer& writer)
 		{
-			Object* object = new Object;
-			object->addValue("name", player.name);
-			object->addValue("id", player.id);
-			object->addValue("position", player.position);
-			object->addValue("items", player.items);
-			object->addValue("alive", player.alive);
-			object->addValue("dead", player.dead);
-
-			return object;
+			writer.CreateObject()
+				.set("name",t.name)
+				.set("id", t.id)
+				.set("position", t.position)
+				.set("items", t.items)
+				.set("alive", t.alive)
+				.set("dead", t.dead);
 		}
 
-		static Player convertFrom(Value* value)
+		static void From(Player& t, Reader& reader)
 		{
-			Object* object = value->toObject();
-
-			Player player;
-			player.name = object->getValue<String>("name");
-			player.id = object->getValue<int>("id");
-			player.position = object->getValue<Vector3>("position");
-			player.items = object->getValue<ItemList>("items");
-			player.alive = object->getValue<bool>("alive");
-			player.dead = object->getValue<bool>("dead");
-			return player;
+			reader.CreateObject()
+				.get("name", t.name)
+				.get("id", t.id)
+				.get("position", t.position)
+				.get("items", t.items)
+				.get("alive", t.alive)
+				.get("dead", t.dead);
 		}
 	};
 
@@ -130,6 +117,49 @@ namespace Exil
 
 const int TEST_LIMIT = 10000;
 
+void test(Player& p)
+{
+	Exil::Timer timer;
+	timer.reset();
+	std::cout << "Construction test for: buffer" << std::endl;
+	{
+		Exil::Buffer buffer(1024);
+		Exil::Writer writer(buffer);
+
+		std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
+		std::cout << std::endl;
+
+		timer.reset();
+		std::cout << "Write test for: writer" << std::endl;
+		for(int i = 0; i < TEST_LIMIT; ++i)
+		{
+			Exil::ConvertType<Player>::To(p, writer);
+		}
+		std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
+		std::cout << "Size was: ~" << writer.getSize() << std::endl;
+
+		Exil::Reader reader(buffer);
+		Player p2;
+
+		timer.reset();
+		std::cout << "Read test for: reader" << std::endl;
+		for(int i = 0; i < TEST_LIMIT; ++i)
+		{
+			Exil::ConvertType<Player>::From(p2, reader);
+		}
+		std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
+		std::cout << std::endl;
+
+		timer.reset();
+		std::cout << "Destruction test for: buffer" << std::endl;
+	}
+	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
+	std::cout << std::endl;
+}
+
+
+
+/*
 template <class StreamType>
 void test(const Player& p)
 {
@@ -158,6 +188,7 @@ void test(const Player& p)
 	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 	std::cout << std::endl;
 }
+
 
 void testAlloc()
 {
@@ -284,6 +315,7 @@ void testOptimal(Player& player)
 	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 	std::cout << std::endl;
 }
+*/
 #pragma endregion Tests
 
 int main()
@@ -299,9 +331,11 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
+	test(player);
+/*
 	Exil::dsout << player;
 
-	/*
+	
 	/// Performance tests
 	test<Exil::JsonStream>(player);
 	test<Exil::XmlStream>(player);
@@ -314,7 +348,7 @@ int main()
 	test<Exil::BinStream>(player);
 	testOptimal(player);
 	testAlloc();
-	*/
+*/	
 
 	std::cin.get();
 

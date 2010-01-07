@@ -4,6 +4,8 @@
 #include <ExilArray.h>
 #include <cctype>
 
+#ifdef UPGRADE_COMPLETE
+
 namespace Exil
 {
 	XmlParser::XmlParser( std::istream& stream )
@@ -249,3 +251,4 @@ namespace Exil
 	}
 
 }//namespace Exil
+#endif

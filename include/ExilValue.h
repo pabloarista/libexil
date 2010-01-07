@@ -2,7 +2,7 @@
 #define ExilValue_h__
 
 #include <Exil.h>
-
+#ifdef UPGRADE_COMPLETE
 namespace Exil
 {
 	class Value
@@ -152,5 +152,7 @@ namespace Exil
 
 #pragma endregion Conversion Methods
 };//namespace Exil
+
+#endif
 
 #endif // ExilValue_h__

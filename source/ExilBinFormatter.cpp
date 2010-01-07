@@ -3,6 +3,8 @@
 #include <ExilObject.h>
 #include <ExilArray.h>
 
+#ifdef UPGRADE_COMPLETE
+
 namespace Exil
 {
 	BinFormatter::BinFormatter( std::ostream& stream )
@@ -103,3 +105,4 @@ namespace Exil
 		mStream.write(reinterpret_cast<char*>(&type), sizeof(char));
 	}
 };//namespace Exil
+#endif

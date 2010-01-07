@@ -1,11 +1,12 @@
 #ifndef ExilTimer_h__
 #define ExilTimer_h__
 
-#include <Exil.h>
+//#include <Exil.h>
 #include <windows.h>
 
 namespace Exil
 {
+		typedef unsigned long long uint64_t;
 	class Timer
 	{
 	public:

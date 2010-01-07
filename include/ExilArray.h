@@ -3,96 +3,95 @@
 
 #include <Exil.h>
 #include <ExilValue.h>
+#include <ExilWriter.h>
+#include <ExilReader.h>
 
 namespace Exil
 {
-	class Array : public Value
+	class Array
 	{
 	public:
-		Array();
-		~Array();
-
-		void addValue(Value* value);
-	
-		template <typename T>
-		void addValue(T value)
+		Array(Reader* reader)
 		{
-			addValue(TypeConversion<T>::convertTo(value));
+			if(mType != Types::Array)
+				throw "Not an Array";
+			mSystem = reader;
 		}
-	
-		ValueList values;
+
+		Array(Writer* writer)
+			: mType(Types::Array), mNumItems(0)
+		{
+			mSystem = writer;
+		}
+
+		template <typename T>
+		Array& add(T& value)
+		{
+			Writer* writer = static_cast<Writer*>(mSystem);
+			++mNumItems;
+			ConvertType<T>::To(value, *writer);
+			return *this;
+		}
+
+		template <typename T>
+		void set(std::list<T>& list)
+		{
+			for(std::list<T>::iterator iter = list.begin();
+				iter != list.end();
+				++iter)
+			{
+				add(*iter);
+			}
+		}
+
+		template <typename T>
+		Array& get(std::list<T>& list)
+		{
+			Reader* reader = static_cast<Reader*>(mSystem);
+
+			for(SizeT i = 0; i < mNumItems; ++i)
+			{
+				T value;
+				ConvertType<T>::From(value, *reader);
+				list.push_back(value);
+			}
+			return *this;
+		}
+
+		SizeT getValue()
+		{
+			return mNumItems;
+		}
+
+		static SizeT Size(SizeT len)
+		{
+			return sizeof(Array);
+		}
+
+	private:
+		InternalType mType;
+		SizeT mNumItems;
+		void* mSystem;
 	};
 
-	//std::ostream& operator<< (std::ostream& os, Array* val);
 
 #pragma region Conversion Methods
-	template<typename T>
-	struct TypeConversion<std::list<T> >
+	template <typename T>
+	struct ConvertType<std::list<T> >
 	{
-		typedef std::list<T> Type;
-		static Value* convertTo(Type list)
+		static void To(std::list<T>& list, Writer& writer)
 		{
-			Array* arr = new Array;
-			for(Type::iterator iter = list.begin();
-				iter != list.end();
-				++iter)
-			{
-				arr->addValue(*iter);
-			}
-
-			return arr;
+			writer.CreateArray()
+				.set(list);
 		}
 
-		static Type convertFrom(Value* val)
+		static void From(std::list<T>& list, Reader& reader)
 		{
-			Array* arr = NULL;
-			if( !(arr = val->toArray()) )
-				throw ConversionException();
-
-			Type list;
-			for(ValueList::iterator iter = arr->values.begin();
-				iter != arr->values.end();
-				++iter)
-			{
-				list.push_back(TypeConversion<T>::convertFrom(*iter));
-			}
-
-			return list;
+			reader.CreateArray()
+				.get(list);
 		}
 	};
 
-	template<typename T>
-	struct TypeConversion<std::vector<T> >
-	{
-		typedef std::vector<T> Type;
-		static Value* convertTo(Type list)
-		{
-			Array* arr = new Array;
-			for(Type::iterator iter = list.begin();
-				iter != list.end();
-				++iter)
-			{
-				arr->addValue(*iter);
-			}
-
-			return arr;
-		}
-
-		static Type convertFrom(Value* val)
-		{
-			Array* arr = value->toArray();
-
-			Type list;
-			for(ValueList::iterator iter = arr->values.begin();
-				iter != arr->values.end();
-				++iter)
-			{
-				list.push_back(TypeConversion<T>::convertFrom(*iter));
-			}
-
-			return list;
-		}
-	};
 #pragma endregion Conversion Methods
 
 };

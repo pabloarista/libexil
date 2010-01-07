@@ -10,15 +10,16 @@ namespace Exil
 	public:
 		JsonFormatter(std::ostream& stream, bool pretty = true);
 
-		JsonFormatter& operator<<(Value* value);
+		template <typename T>
+		JsonFormatter& operator<<(T* value);
 
-		void _writeObject(Object* object, bool leadTab = true);
+		void write(Buffer& buffer);
 
-		void _writeArray(Array* list, bool leadTab = true);
+		template <typename T>
+		void _write(T* value, bool comma = false, bool leadTab = true);
 
-		void _writePair(const String& name, Value* value, bool comma = true);
-
-		void _writeValue(Value* value, bool comma = false, bool leadTab = true);
+		template <typename T>
+		void _writePair(const char* name, T* value, bool comma = true);
 
 		void _increaseTab();
 
@@ -27,6 +28,7 @@ namespace Exil
 		bool mPretty;
 		int mTabCount;
 		String mTabs;
+		Buffer& mBuffer;
 	};
 
 };//namespace Exil

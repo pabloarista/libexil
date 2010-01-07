@@ -8,14 +8,83 @@ namespace Exil
 	JsonFormatter::JsonFormatter( std::ostream& stream, bool pretty )
 		: Formatter(stream), mPretty(pretty), mTabCount(0)
 	{
-
 	}
 
-	JsonFormatter& JsonFormatter::operator<<( Value* value )
+	template <typename T>
+	JsonFormatter& Exil::JsonFormatter::operator<<( T* value )
 	{
-		_writeValue(value);
-		delete value;
-		return *this;
+		_write(value);
+	}
+
+	template <typename T>
+	void JsonFormatter<T>::_writePair( const char* name, T* value, bool comma /*= true*/ )
+	{
+		mStream << mTabs << "\"" << name << "\" : ";
+		_write(value, comma, false);
+	}
+
+	template <>
+	void JsonFormatter<T>::_write( Integer* value, bool comma /*= false*/, bool leadTab /*= true*/ )
+	{
+		mStream << (leadTab?mTabs:BLANK_STRING) << value->getValue();
+	}
+
+	template <>
+	void JsonFormatter<T>::_write( Float* value, bool comma /*= false*/, bool leadTab /*= true*/ )
+	{
+		mStream << (leadTab?mTabs:BLANK_STRING) << value->getValue();
+	}
+
+	template <>
+	void JsonFormatter<T>::_write( String* value, bool comma /*= false*/, bool leadTab /*= true*/ )
+	{
+		mStream << (leadTab?mTabs:BLANK_STRING) << "\"" << value->getValue() << "\"";
+	}
+
+	template <>
+	void JsonFormatter<T>::_write( Boolean* value, bool comma /*= false*/, bool leadTab /*= true*/ )
+	{
+		if(value->getValue())
+			mStream << (leadTab?mTabs:BLANK_STRING) << "true";
+		else
+			mStream << (leadTab?mTabs:BLANK_STRING) << "false";
+	}
+
+	template <>
+	void JsonFormatter<T>::_write( Object* value, bool comma /*= false*/, bool leadTab /*= true*/ )
+	{
+	}
+
+	template <>
+	void JsonFormatter<T>::_write( Array* value, bool comma /*= false*/, bool leadTab /*= true*/ )
+	{
+		mStream << (leadTab?mTabs:BLANK_STRING) << "[";
+		_increaseTab();
+
+		if(mPretty)
+			mStream << std::endl;
+
+
+		char* ptr = 
+		for(ValueList::iterator iter = list->values.begin();
+			iter != list->values.end();
+			++iter)
+		{
+			_write(*iter, true);
+		}
+
+		_decreaseTab();
+		mStream << mTabs << "]";
+	}
+
+	void JsonFormatter::_write(Buffer& buffer)
+	{
+		Buffer::Iterator iter = buffer.getIterator();
+
+		while(iter.isValid())
+		{
+
+		}
 	}
 
 	void JsonFormatter::_writeObject( Object* object, bool leadTab /*= true*/ )

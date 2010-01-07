@@ -2,6 +2,7 @@
 #define ExilXmlParser_h__
 
 #include <Exil.h>
+#ifdef UPGRADE_COMPLETE
 
 namespace Exil
 {
@@ -38,5 +39,5 @@ namespace Exil
 	};
 
 };//namespace Exil
-
+#endif
 #endif // ExilXmlParser_h__

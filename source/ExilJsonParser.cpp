@@ -3,6 +3,7 @@
 #include <ExilArray.h>
 #include <ExilObject.h>
 
+#ifdef UPGRADE_COMPLETE
 namespace Exil
 {
 	JsonParser::JsonParser( std::istream& stream ) 
@@ -185,3 +186,4 @@ namespace Exil
 		return new Value();
 	}
 };//namespace Exil
+#endif

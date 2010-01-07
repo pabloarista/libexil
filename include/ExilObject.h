@@ -2,46 +2,63 @@
 #define ExilObject_h__
 
 #include <Exil.h>
-#include <ExilValue.h>
+#include <ExilBuffer.h>
+#include <ExilReader.h>
+#include <ExilWriter.h>
 
 namespace Exil
 {
-	class Object : public Value
+	class Object
 	{
+	private:
+		// not implemented
+		Object(const Object&);
+
 	public:
-		Object();
+		Object(Reader* reader);
 
-		~Object();
-	
-		void addValue(const String& name, Value* value);
+		Object(Writer* writer);
 
-		void addValue( const Pair& pair);
-	
-		template <typename T>
-		void addValue(const String& name, T value)
+		inline SizeT getNumItems()
 		{
-			addValue(name, TypeConversion<T>::convertTo(value));
+			return mNumItems;
 		}
 
-		bool hasValue(const String& name);
-
-		Value* getValue(const String& name);
-
-		template <typename T>
-		T getValue(const String& name)
+		static inline SizeT Size(SizeT len)
 		{
-			Value* value = getValue(name);
-			if(!value)
-				throw ConversionException();
-
-			return TypeConversion<T>::convertFrom(value);
+			return sizeof(Object);
 		}
 
-		ValueMap values;
+		template <typename T>
+		Object& set(const char* str, T& value)
+		{
+			++mNumItems;
+			Writer* writer = static_cast<Writer*>(mSystem);
+			ConvertType<const char*>::To(str, *writer);
+			ConvertType<T>::To(value, *writer);
+			return *this;
+		}
+
+		template <typename T>
+		Object& get(const char* str, T& value)
+		{
+			Reader* reader = static_cast<Reader*>(mSystem);
+
+			std::string s;
+			ConvertType<std::string>::From(s, *reader);
+			if(strcmp(str, s.c_str()) != 0)
+				throw "Incorrect key name";
+
+			ConvertType<T>::From(value, *reader);
+			return *this;
+		}
+
+	private:
+		InternalType mType;
+		SizeT mNumItems;
+		void* mSystem;
 	};
 
-	//std::ostream& operator<< (std::ostream& os, Object* val);
-};
-
+};//namespace Exil
 
 #endif // ExilObject_h__
