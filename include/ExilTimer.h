@@ -21,7 +21,7 @@ namespace Exil
 			endTime = startTime;
 		}
 
-		uint64_t getTimeElapsed()
+		U64 getTimeElapsed()
 		{
 			QueryPerformanceCounter(&endTime);
 			return (endTime.QuadPart - startTime.QuadPart) * 1000 / ticksPerSecond.QuadPart;

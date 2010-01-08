@@ -1,18 +1,443 @@
+
 #include <iostream>
-#include <sstream>
+#include <list>
+#include <vector>
 
-/// DataStream definitions
-#include <ExilDataStream.h>
+#include "Exil.h"
+#include "ExilTimer.h"
+#include "ExilBuffer.h"
 
-/// basic types
-#include <ExilValue.h>
-#include <ExilObject.h>
-#include <ExilArray.h>
+#pragma pack(push,1)
 
-/// only needed for tests
-#include <ExilTimer.h>
+namespace Exil
+{
 
-typedef Exil::String String;
+	class Writer
+	{
+	public:
+		Writer(Buffer& buffer)
+			: mBuffer(buffer)
+		{
+		}
+	
+		template <typename T>
+		void write(const T& value);
+	
+		template <typename T>
+		void write(const T* value);
+	
+		Data::Object& CreateObject();
+	
+		Data::Array& CreateArray();
+	
+		static SizeT GetSize(const char* ptr)
+		{
+			return *reinterpret_cast<const SizeT*>(ptr - sizeof(SizeT));
+		}
+	
+		static Type GetType(const char* ptr)
+		{
+			InternalType it = *reinterpret_cast<const InternalType*>(ptr);
+			return static_cast<Type>(it);
+		}
+	
+		size_t getSize() const
+		{
+			return mBuffer.getSize();
+		}
+	
+	private:
+		Buffer& mBuffer;
+	};
+	
+	class Reader
+	{
+	public:
+		Reader(Buffer& buffer)
+			: mBuffer(buffer)
+		{
+		}
+	
+		template <typename T>
+		void read(T& value);
+	
+		Data::Object& CreateObject();
+	
+		Data::Array& CreateArray();
+	
+	private:
+		Buffer& mBuffer;
+	};
+	
+	
+	template <typename T>
+	struct ConvertType
+	{
+		static void To(T& t, Writer& writer)
+		{
+			writer.write(t);
+		}
+	
+		static void From(T& t, Reader& reader)
+		{
+			reader.read(t);
+		}
+	};
+	
+namespace Data
+{
+	
+		class Object
+		{
+		private:
+			Object(const Object&);
+		public:
+			Object(Reader* reader)
+			{
+				if(mType != Types::Object)
+					throw "Not an Object";
+		
+				mSystem = reader;
+			}
+		
+			Object(Writer* writer)
+			{
+				mType = Types::Object;
+				mNumItems = 0;
+				mSystem = writer;
+			}
+		
+			SizeT getNumItems()
+			{
+				return mNumItems;
+			}
+		
+			static SizeT Size(SizeT len)
+			{
+				return sizeof(Object);
+			}
+		
+			template <typename T>
+			Object& set(const char* str, T& value)
+			{
+				++mNumItems;
+				Writer* writer = static_cast<Writer*>(mSystem);
+				ConvertType<const char*>::To(str, *writer);
+				ConvertType<T>::To(value, *writer);
+				return *this;
+			}
+		
+			template <typename T>
+			Object& get(const char* str, T& value)
+			{
+				Reader* reader = static_cast<Reader*>(mSystem);
+		
+				std::string s;
+				ConvertType<std::string>::From(s, *reader);
+				if(strcmp(str, s.c_str()) != 0)
+					throw "Incorrect key name";
+		
+				ConvertType<T>::From(value, *reader);
+				return *this;
+			}
+		
+		private:
+			InternalType mType;
+			SizeT mNumItems;
+			void* mSystem;
+		};
+		
+		class Array
+		{
+		public:
+			Array(Reader* reader)
+			{
+				if(mType != Types::Array)
+					throw "Not an Array";
+				mSystem = reader;
+			}
+		
+			Array(Writer* writer)
+				: mType(Types::Array), mNumItems(0)
+			{
+				mSystem = writer;
+			}
+		
+			template <typename T>
+			Array& add(T& value)
+			{
+				Writer* writer = static_cast<Writer*>(mSystem);
+				++mNumItems;
+				ConvertType<T>::To(value, *writer);
+				return *this;
+			}
+		
+			template <typename T>
+			void set(std::list<T>& list)
+			{
+				for(std::list<T>::iterator iter = list.begin();
+					iter != list.end();
+					++iter)
+				{
+					add(*iter);
+				}
+			}
+		
+			template <typename T>
+			Array& get(std::list<T>& list)
+			{
+				Reader* reader = static_cast<Reader*>(mSystem);
+		
+				for(SizeT i = 0; i < mNumItems; ++i)
+				{
+					T value;
+					ConvertType<T>::From(value, *reader);
+					list.push_back(value);
+				}
+				return *this;
+			}
+		
+			SizeT getValue()
+			{
+				return mNumItems;
+			}
+		
+			static SizeT Size(SizeT len)
+			{
+				return sizeof(Array);
+			}
+		
+		private:
+			InternalType mType;
+			SizeT mNumItems;
+			void* mSystem;
+		};
+		
+		class String
+		{
+		public:
+			String()
+			{
+				if(mType != Types::String)
+					throw "Not a String";
+			}
+		
+			String(const char* str, SizeT len)
+			{
+				mType = Types::String;
+				char* value = reinterpret_cast<char*>(&mType) + sizeof(mType);
+				memcpy(value, str, len);
+			}
+		
+			String(const std::string& str)
+			{
+				mType = Types::String;
+				char* value = reinterpret_cast<char*>(&mType) + sizeof(mType);
+				memcpy(value, str.c_str(), str.size());
+			}
+		
+			const char* getValue()
+			{
+				return reinterpret_cast<char*>(&mType) + sizeof(InternalType);
+			}
+		
+			SizeT getLength()
+			{
+				return *(reinterpret_cast<SizeT*>(&mType) - sizeof(InternalType)) - sizeof(InternalType);
+			}
+		
+			static SizeT Size(SizeT len)
+			{
+				return sizeof(InternalType) + len;
+			}
+		
+		private:
+			InternalType mType;
+		};
+		
+		class Float
+		{
+		public:
+			Float()
+			{
+				if(mType != Types::Float)
+					throw "Not a Float!";
+			}
+			Float(float f)
+			{
+				mType = Types::Float;
+				mValue = f;
+			}
+		
+			float getValue()
+			{
+				return mValue;
+			}
+		
+		private:
+			InternalType mType;
+			float mValue;
+		};
+		
+		class Integer
+		{
+		public:
+			Integer()
+			{
+				if(mType != Types::Integer)
+					throw "Not an Integer";
+			}
+		
+			Integer(int i)
+			{
+				mType = Types::Integer;
+				mValue = i;
+			}
+		
+			inline int getValue()
+			{
+				return mValue;
+			}
+		
+		private:
+			InternalType mType;
+			int mValue;
+		};
+		
+		class Boolean
+		{
+		public:
+			Boolean()
+			{
+				if(mType != Types::Boolean)
+					throw "Not a Boolean";
+			}
+		
+			Boolean(bool b)
+			{
+				mType = Types::Boolean;
+				mValue = b;
+			}
+		
+			inline bool getValue()
+			{
+				return mValue;
+			}
+		
+		private:
+			InternalType mType;
+			bool mValue;
+		};
+		
+
+};//namespace Data
+
+	#pragma region read
+	
+	template <>
+	void Reader::read(int& value)
+	{
+		Data::Integer* i = new(mBuffer.reallocate(sizeof(Data::Integer))) Data::Integer();
+		value = i->getValue();
+	}
+	
+	template <>
+	void Reader::read(float& value)
+	{
+		Data::Float* f = new(mBuffer.reallocate(sizeof(Data::Float))) Data::Float();
+		value = f->getValue();
+	}
+	
+	template <>
+	void Reader::read(bool& value)
+	{
+		Data::Boolean* b = new(mBuffer.reallocate(sizeof(Data::Boolean))) Data::Boolean();
+		value = b->getValue();
+	}
+	
+	template <>
+	void Reader::read(std::string& value)
+	{
+		char* ptr = mBuffer.reallocate(sizeof(Data::String));
+		Data::String* s = new(ptr) Data::String();
+		const char* c = s->getValue();
+		SizeT len = s->getLength();
+		value = std::string(s->getValue(), s->getLength());
+	}
+	
+	Data::Object& Reader::CreateObject()
+	{
+		Data::Object* obj = new(mBuffer.reallocate(Data::Object::Size(0))) Data::Object(this);
+		return *obj;
+	}
+	
+	Data::Array& Reader::CreateArray()
+	{
+		Data::Array* arr = new(mBuffer.reallocate(Data::Array::Size(0))) Data::Array(this);
+		return *arr;
+	}
+	
+	
+	#pragma endregion read
+	#pragma region write
+	
+	template <>
+	void Writer::write(const int& value)
+	{
+		new(mBuffer.allocate(sizeof(Data::Integer))) Data::Integer(value);
+	}
+	
+	template <>
+	void Writer::write(const float& value)
+	{
+		new(mBuffer.allocate(sizeof(Data::Float))) Data::Float(value);
+	}
+	
+	template <>
+	void Writer::write(const bool& value)
+	{
+		new(mBuffer.allocate(sizeof(Data::Boolean))) Data::Boolean(value);
+	}
+	
+	template <>
+	void Writer::write(const std::string& value)
+	{
+		new(mBuffer.allocate(Data::String::Size(value.size()))) Data::String(value);
+	}
+	
+	template <>
+	void Writer::write(const char* value)
+	{
+		SizeT length = strlen(value);
+		new(mBuffer.allocate(Data::String::Size(length))) Data::String(value, length);
+	}
+	
+	Data::Object& Writer::CreateObject()
+	{
+		Data::Object* obj = new(mBuffer.allocate(Data::Object::Size(0))) Data::Object(this);
+		return *obj;
+	}
+	
+	Data::Array& Writer::CreateArray()
+	{
+		Data::Array* arr = new(mBuffer.allocate(Data::Array::Size(0))) Data::Array(this);
+		return *arr;
+	}
+
+};//namespace Exil
+
+#pragma endregion write
+#pragma region Tests
+/*
+template <typename T>
+struct ConvertType
+{
+static void To(T, Creator&);
+static void From(T&, Creator&);
+};
+*/
+
+const std::string BLANK_STRING;
 
 struct Vector3
 {
@@ -24,10 +449,10 @@ struct Vector3
 
 struct Item
 {
-	Item(const String& n = Exil::BLANK_STRING, int q = 0)
+	Item(const std::string& n = BLANK_STRING, int q = 0)
 		: name(n), quantity(q)
 	{}
-	String name;
+	std::string name;
 	int quantity;
 };
 
@@ -35,7 +460,7 @@ typedef std::list<Item> ItemList;
 
 struct Player
 {
-	String name;
+	std::string name;
 	int id;
 	Vector3 position;
 	ItemList items;
@@ -43,251 +468,158 @@ struct Player
 	bool dead;
 };
 
-namespace Exil
+template <>
+struct Exil::ConvertType<Vector3>
 {
-	template<>
-	struct TypeConversion<Vector3>
+	static void To(Vector3& t, Writer& writer)
 	{
-		static Value* convertTo(Vector3 vec)
-		{
-			Object* object = new Object;
-			object->addValue("x", vec.x);
-			object->addValue("y", vec.y);
-			object->addValue("z", vec.z);
+		writer.CreateObject()
+			.set("x",t.x)
+			.set("y",t.y)
+			.set("z",t.z);
+	}
 
-			return object;
-		}
-
-		static Vector3 convertFrom(Value* value)
-		{
-			Object* object = value->toObject();
-
-			Vector3 vec;
-			vec.x = object->getValue<float>("x");
-			vec.y = object->getValue<float>("y");
-			vec.z = object->getValue<float>("z");
-
-			return vec;
-		}
-	};
-
-	template<>
-	struct TypeConversion<Item>
+	static void From(Vector3& t, Reader& reader)
 	{
-		static Value* convertTo(Item item)
-		{
-			Object* object = new Object;
-			object->addValue("name", item.name);
-			object->addValue("quantity", item.quantity);
-			return object;
-		}
+		reader.CreateObject()
+			.get("x", t.x)
+			.get("y", t.y)
+			.get("z", t.z);
+	}
+};
 
-		static Item convertFrom(Value* value)
-		{
-			Object* object = value->toObject();
-
-			Item item;
-			item.name = object->getValue<String>("name");
-			item.quantity = object->getValue<int>("quantity");
-			return item;
-		}
-	};
-
-	template<>
-	struct TypeConversion<Player>
+template <>
+struct Exil::ConvertType<Item>
+{
+	static void To(Item& t, Writer& writer)
 	{
-		static Value* convertTo(Player player)
-		{
-			Object* object = new Object;
-			object->addValue("name", player.name);
-			object->addValue("id", player.id);
-			object->addValue("position", player.position);
-			object->addValue("items", player.items);
-			object->addValue("alive", player.alive);
-			object->addValue("dead", player.dead);
+		writer.CreateObject()
+			.set("name",t.name)
+			.set("quantity",t.quantity);
+	}
 
-			return object;
-		}
+	static void From(Item& t, Reader& reader)
+	{
+		reader.CreateObject()
+			.get("name", t.name)
+			.get("quantity", t.quantity);
+	}
+};
 
-		static Player convertFrom(Value* value)
-		{
-			Object* object = value->toObject();
+template <>
+struct Exil::ConvertType<Player>
+{
+	static void To(Player& t, Writer& writer)
+	{
+		writer.CreateObject()
+			.set("name",t.name)
+			.set("id", t.id)
+			.set("position", t.position)
+			.set("items", t.items)
+			.set("alive", t.alive)
+			.set("dead", t.dead);
+	}
 
-			Player player;
-			player.name = object->getValue<String>("name");
-			player.id = object->getValue<int>("id");
-			player.position = object->getValue<Vector3>("position");
-			player.items = object->getValue<ItemList>("items");
-			player.alive = object->getValue<bool>("alive");
-			player.dead = object->getValue<bool>("dead");
-			return player;
-		}
-	};
+	static void From(Player& t, Reader& reader)
+	{
+		reader.CreateObject()
+			.get("name", t.name)
+			.get("id", t.id)
+			.get("position", t.position)
+			.get("items", t.items)
+			.get("alive", t.alive)
+			.get("dead", t.dead);
+	}
+};
 
-};//namespace Exil
+template <typename T>
+struct Exil::ConvertType<std::list<T> >
+{
+	static void To(std::list<T>& list, Writer& writer)
+	{
+		writer.CreateArray()
+			.set(list);
+	}
 
-#pragma region Tests
+	static void From(std::list<T>& list, Reader& reader)
+	{
+		reader.CreateArray()
+			.get(list);
+	}
+};
+
+#pragma endregion Tests
+
+
+#pragma pack(pop)
 
 const int TEST_LIMIT = 10000;
 
-template <class StreamType>
-void test(const Player& p)
-{
-	std::stringstream ss;
-	StreamType stream(ss);
-	Exil::Timer timer;
-	timer.reset();
-	std::cout << "Write test for: " << typeid(StreamType).name() << std::endl;
-	for(int i = 0; i < TEST_LIMIT; ++i)
-	{
-		stream << p;
-	}
-	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
-	std::cout << "Size was: " << ss.str().length() << std::endl;
-	//String str = ss.str();
-
-
-	Player p2;
-
-	timer.reset();
-	std::cout << "Read test for: " << typeid(StreamType).name() << std::endl;
-	for(int i = 0; i < TEST_LIMIT; ++i)
-	{
-		stream >> p2;
-	}
-	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
-	std::cout << std::endl;
-}
-
-void testAlloc()
+void test(Player& p)
 {
 	Exil::Timer timer;
 	timer.reset();
-	std::cout << "Value allocation test" << std::endl;
-	Exil::ValueList list;
-	for(int i = 0; i < TEST_LIMIT * 10; ++i)
+	std::cout << "Construction test for: buffer" << std::endl;
 	{
-		list.push_back(new Exil::Value("Testing!"));
-	}
-	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
+		Exil::Buffer buffer(1024);
+		Exil::Writer writer(buffer);
 
-	timer.reset();
-	std::cout << "Value Deletion Test" << std::endl;
-	Exil::ValueList::iterator iter = list.begin();
-	for(int i = 0; i < TEST_LIMIT * 10; ++i)
-	{
-		Exil::Value* v = *iter;
-		++iter;
-		delete v;
+		std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
+		std::cout << std::endl;
+
+		timer.reset();
+		std::cout << "Write test for: writer" << std::endl;
+		for(int i = 0; i < TEST_LIMIT; ++i)
+		{
+			Exil::ConvertType<Player>::To(p, writer);
+		}
+		std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
+		std::cout << "Size was: ~" << writer.getSize() << std::endl;
+
+		Exil::Reader reader(buffer);
+		Player p2;
+
+		timer.reset();
+		std::cout << "Read test for: reader" << std::endl;
+		for(int i = 0; i < TEST_LIMIT; ++i)
+		{
+			Exil::ConvertType<Player>::From(p2, reader);
+		}
+		std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
+		std::cout << std::endl;
+
+		timer.reset();
+		std::cout << "Destruction test for: buffer" << std::endl;
 	}
 	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
 	std::cout << std::endl;
 }
 
 
-inline void optimalSerialize(std::stringstream& ss, Player& player)
-{
-	// write the name
-	int i;
-	i = player.name.size();
-	ss.write(reinterpret_cast<char*>(&i), sizeof(int));
-	ss.write(player.name.c_str(), player.name.size() * sizeof(char));
-
-	// write the id
-	ss.write(reinterpret_cast<char*>(&player.id), sizeof(int));
-
-	// write bools
-	ss.write(reinterpret_cast<char*>(&player.alive), sizeof(char));
-	ss.write(reinterpret_cast<char*>(&player.dead), sizeof(char));
-
-	// write position
-	ss.write(reinterpret_cast<char*>(&player.position.x), sizeof(float));
-	ss.write(reinterpret_cast<char*>(&player.position.y), sizeof(float));
-	ss.write(reinterpret_cast<char*>(&player.position.z), sizeof(float));
-
-	// write items
-	i = player.items.size();
-	ss.write(reinterpret_cast<char*>(&i), sizeof(int));
-	for(ItemList::iterator iter = player.items.begin();
-		iter != player.items.end();
-		++iter)
-	{
-		Item& item = *iter;
-		i = item.name.size();
-		ss.write(reinterpret_cast<char*>(&i), sizeof(int));
-		ss.write(item.name.c_str(), item.name.size() * sizeof(char));
-
-		ss.write(reinterpret_cast<char*>(&item.quantity), sizeof(int));
-	}
-}
-
-inline void optimalDeserialize(std::stringstream& ss, Player& player)
-{
-	// read the name
-	int i(0);
-	ss.read(reinterpret_cast<char*>(&i), sizeof(int));
-	char* buff = new char[i + 1];
-	ss.read(buff, i * sizeof(char));
-	buff[i] = 0;
-	player.name = buff;
-	delete buff;
-
-	// write the id
-	ss.read(reinterpret_cast<char*>(&player.id), sizeof(int));
-
-	// write bools
-	ss.read(reinterpret_cast<char*>(&player.alive), sizeof(char));
-	ss.read(reinterpret_cast<char*>(&player.dead), sizeof(char));
-
-	// write position
-	ss.read(reinterpret_cast<char*>(&player.position.x), sizeof(float));
-	ss.read(reinterpret_cast<char*>(&player.position.y), sizeof(float));
-	ss.read(reinterpret_cast<char*>(&player.position.z), sizeof(float));
-
-	// write items
-	ss.read(reinterpret_cast<char*>(&i), sizeof(int));
-	int k = 0;
-	for(int j = 0; j < i; ++j)
-	{
-		Item item;
-		ss.read(reinterpret_cast<char*>(&k), sizeof(int));
-		buff = new char[k + 1];
-		ss.read(buff, k * sizeof(char));
-		buff[k] = 0;
-		item.name = buff;
-		delete buff;
-		ss.read(reinterpret_cast<char*>(&item.quantity), sizeof(int));
-		player.items.push_back(item);
-	}
-}
-
-void testOptimal(Player& player)
-{
-	std::stringstream ss;
-	Exil::Timer timer;
-	timer.reset();
-	std::cout << "Write test for: Optimal" << std::endl;
-	for(int i = 0; i < TEST_LIMIT; ++i)
-	{
-		optimalSerialize(ss, player);
-	}
-	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
-	std::cout << "Size was: " << ss.str().length() << std::endl;
-
-	Player p2;
-	timer.reset();
-	std::cout << "Read test for: Optimal" << std::endl;
-	for(int i = 0; i < TEST_LIMIT; ++i)
-	{
-		optimalDeserialize(ss, p2);
-	}
-	std::cout << "Test took: " << timer.getTimeElapsed() << std::endl;
-	std::cout << std::endl;
-}
-#pragma endregion Tests
 
 int main()
 {
+
+	//	Writer writer;
+	/*
+	Vector3 v1(10,20,30);
+	Vector3 v2;
+
+	ConvertType<Vector3>::To(v1,writer);
+	Reader reader(writer.mBuffer);
+	ConvertType<Vector3>::From(v2, reader);
+	*/
+	/*
+	Player player;
+	player.name = "Zeus";
+	player.id = 12345;
+	player.position = Vector3(10,20,30);
+	player.items.push_back(Item("Stick", 5));
+	player.items.push_back(Item("Sword", 2));
+	player.items.push_back(Item("Potion", 99));
+	player.alive = true;
+	player.dead = false;
+	*/
 	Player player;
 	player.position = Vector3(1.1f, 2.2f, 3.3f);
 	player.name = "Woot";
@@ -299,23 +631,48 @@ int main()
 	player.items.push_back(Item("Wont", 3));
 	player.items.push_back(Item("Stop", 4));
 
-	Exil::dsout << player;
+	//ConvertType<Player>::To(player, writer);
+
+	//Player player2;
+	//Reader reader(writer.mBuffer);
+	//ConvertType<Player>::From(player2, reader);
+
+	test(player);
+	test(player);
+	test(player);
+	test(player);
+	test(player);
+	test(player);
+	test(player);
+	test(player);
+	test(player);
+
 
 	/*
-	/// Performance tests
-	test<Exil::JsonStream>(player);
-	test<Exil::XmlStream>(player);
-	test<Exil::BinStream>(player);
-	testOptimal(player);
-	testAlloc();
-	/// Second pass
-	test<Exil::JsonStream>(player);
-	test<Exil::XmlStream>(player);
-	test<Exil::BinStream>(player);
-	testOptimal(player);
-	testAlloc();
-	*/
+	creator.write("Hello World!", 12);
+	creator.write(50);
+	creator.write(3.14159f);
 
+	int i = 0;
+	float f = 0;
+	std::string s;
+
+	Reader reader(creator.mBuffer);
+	reader.read(s);
+	std::cout << "s = " << s.c_str() << std::endl;
+	reader.read(i);
+	std::cout << "i = " << i << std::endl;
+	reader.read(f);
+	std::cout << "f = " << f << std::endl;
+	*/
+	/*
+	std::list<int> list;
+	list.push_back(10);
+	list.push_back(20);
+	list.push_back(30);
+	list.push_back(40);
+	creator.write(list, 0);
+	*/
 	std::cin.get();
 
 	return 0;
