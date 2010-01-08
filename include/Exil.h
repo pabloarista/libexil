@@ -37,6 +37,11 @@ namespace Exil
 		class String;
 	}
 
+	class Writer;
+	class Reader;
+	class Buffer;
+	struct Chunk;
+
 	namespace Types
 	{
 		enum Type
@@ -54,6 +59,25 @@ namespace Exil
 	typedef Types::Type Type;
 	typedef U8 InternalType;
 	typedef U16 SizeT;
+
+	template <typename T>
+	struct ConvertType
+	{
+		static void To(T& t, Writer& writer)
+		{
+			writer.write(t);
+		}
+
+		static void From(T& t, Reader& reader)
+		{
+			reader.read(t);
+		}
+	};
+
+	SizeT GetSize(const char* ptr);
+
+	Type GetType(const char* ptr);
+
 
 	class Exception : public std::runtime_error
 	{

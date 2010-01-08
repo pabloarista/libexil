@@ -188,14 +188,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilArray.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\ExilBoolean.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\include\ExilBuffer.h"
 				>
 			</File>
@@ -204,23 +196,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\ExilFloat.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\ExilInteger.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\ExilObject.h"
+				RelativePath="..\..\include\ExilData.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\include\ExilReader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\ExilString.h"
 				>
 			</File>
 			<File
@@ -240,14 +220,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\ExilArray.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\ExilBoolean.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\source\ExilBuffer.cpp"
 				>
 			</File>
@@ -256,23 +228,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\ExilFloat.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\ExilInteger.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\ExilObject.cpp"
+				RelativePath="..\..\source\ExilData.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\source\ExilReader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\ExilString.cpp"
 				>
 			</File>
 			<File
@@ -290,6 +250,10 @@
 		</File>
 		<File
 			RelativePath="..\..\Sample.txt"
+			>
+		</File>
+		<File
+			RelativePath="..\..\Tests.h"
 			>
 		</File>
 	</Files>

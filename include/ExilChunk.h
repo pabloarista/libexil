@@ -7,43 +7,13 @@ namespace Exil
 {
 	struct Chunk
 	{
-		Chunk(char* buff, size_t size)
-		{
-			mSize = size;
-			buffer = new char[mSize];
-			ptr = buffer;
-			readPtr = buffer;
-			end = buffer + mSize;
-			memcpy(buffer, buff, mSize);
-		}
+		Chunk(char* buff, size_t size);
 	
-		Chunk(size_t size)
-		{
-			mSize = size;
-			buffer = new char[mSize];
-			ptr = buffer;
-			readPtr = buffer;
-			end = buffer + mSize;
-			memset(buffer, 0, mSize);
-		}
+		Chunk(size_t size);
 	
-		Chunk(Chunk& other)
-		{
-			mSize = other.mSize;
-			buffer = new char[mSize];
-			memcpy(buffer, other.buffer, mSize);
-			ptr = buffer;
-			end = buffer + mSize;
-			readPtr = buffer;
-		}
+		Chunk(Chunk& other);
 	
-		~Chunk()
-		{
-			memset(buffer, 0, mSize);
-			delete buffer;
-			ptr = readPtr = 0;
-			end = 0;
-		}
+		~Chunk();
 	
 		char* buffer;
 		char* ptr;

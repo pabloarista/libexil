@@ -2,6 +2,18 @@
 
 namespace Exil
 {
+
+	Exil::SizeT GetSize( const char* ptr )
+	{
+		return *reinterpret_cast<const SizeT*>(ptr - sizeof(SizeT));
+	}
+
+	Exil::Type GetType( const char* ptr )
+	{
+		InternalType it = *reinterpret_cast<const InternalType*>(ptr);
+		return static_cast<Type>(it);
+	}
+
 	Exception::Exception(const String& message)
 		: std::runtime_error(message)
 	{}
