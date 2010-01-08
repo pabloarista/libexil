@@ -2,14 +2,13 @@
 #define ExilBuffer_h__
 
 #include <Exil.h>
-#include <ExilChunk.h>
 
 namespace Exil
 {
 	struct RawBuffer
 	{
-		char* buffer;
 		size_t size;
+		char* buffer;
 	};
 
 	class Buffer
@@ -17,9 +16,9 @@ namespace Exil
 	public:
 		const static SizeT DefaultChunkSize = 1024;
 
-	public:
 		typedef std::list<Chunk*> ChunkList;
 
+	public:
 		Buffer(Buffer& other);
 
 		Buffer(char* buff, size_t size);

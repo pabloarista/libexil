@@ -1,4 +1,5 @@
 #include "ExilBuffer.h"
+#include "ExilChunk.h"
 
 namespace Exil
 {

@@ -1,11 +1,15 @@
-TODO:
-* Comments!
-* Parsers should support negative numbers
-* Stream for (optimized) binary
-* Stream for gzip'd binary
-* Move data in Value/Object/Array to private
-* Support for more number types?
-	* JSON could denote the difference between float and int, but no other
-	* XML could denote as much as we like
-	* binary and optimized binary would benefit the most from the smaller number of bits
-
+Objectives:
+* Fast!
+* Idiot-proof syntax (simulate mono-directional iterator?)
+* Operate on a buffer
+* Support parsing a buffer to create user-objects via factory
+* Support GZip
+* Support full JSON
+* Support subset of XML
+* Support Binary
+* Convienience function for loading a file to a buffer to be parsed
+* Stream to buffer
+* Create a proper allocator
+* Support optional secondary allocator?
+* Support serializing to an ostream
+* Efficient use of memory

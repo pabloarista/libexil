@@ -9,6 +9,22 @@
 
 const int TEST_LIMIT = 10000;
 
+Player createPlayer()
+{
+	Player player;
+	player.position = Vector3(1.1f, 2.2f, 3.3f);
+	player.name = "Woot";
+	player.id = 12345;
+	player.alive = true;
+	player.dead = false;
+	player.items.push_back(Item("This", 1));
+	player.items.push_back(Item("Thing", 2));
+	player.items.push_back(Item("Wont", 3));
+	player.items.push_back(Item("Stop", 4));
+
+	return player;
+}
+
 void test(Player& p)
 {
 	Exil::Timer timer;
@@ -52,80 +68,22 @@ void test(Player& p)
 
 int main()
 {
+	Player player = createPlayer();
+	//test(player);
 
-	//	Writer writer;
-	/*
-	Vector3 v1(10,20,30);
-	Vector3 v2;
+	Exil::Buffer buff;
+	Exil::Writer writer(buff);
 
-	ConvertType<Vector3>::To(v1,writer);
-	Reader reader(writer.mBuffer);
-	ConvertType<Vector3>::From(v2, reader);
-	*/
-	/*
-	Player player;
-	player.name = "Zeus";
-	player.id = 12345;
-	player.position = Vector3(10,20,30);
-	player.items.push_back(Item("Stick", 5));
-	player.items.push_back(Item("Sword", 2));
-	player.items.push_back(Item("Potion", 99));
-	player.alive = true;
-	player.dead = false;
-	*/
-	Player player;
-	player.position = Vector3(1.1f, 2.2f, 3.3f);
-	player.name = "Woot";
-	player.id = 12345;
-	player.alive = true;
-	player.dead = false;
-	player.items.push_back(Item("This", 1));
-	player.items.push_back(Item("Thing", 2));
-	player.items.push_back(Item("Wont", 3));
-	player.items.push_back(Item("Stop", 4));
+	Exil::ConvertType<Player>::To(player, writer);
 
-	//ConvertType<Player>::To(player, writer);
+	Exil::RawBuffer* raw = buff.toString();
 
-	//Player player2;
-	//Reader reader(writer.mBuffer);
-	//ConvertType<Player>::From(player2, reader);
+	Exil::Buffer buff2(raw->buffer, raw->size);
+	Exil::Reader reader(buff2);
 
-	test(player);
-	test(player);
-	test(player);
-	test(player);
-	test(player);
-	test(player);
-	test(player);
-	test(player);
-	test(player);
+	Player player2;
+	Exil::ConvertType<Player>::From(player2, reader);
 
-
-	/*
-	creator.write("Hello World!", 12);
-	creator.write(50);
-	creator.write(3.14159f);
-
-	int i = 0;
-	float f = 0;
-	std::string s;
-
-	Reader reader(creator.mBuffer);
-	reader.read(s);
-	std::cout << "s = " << s.c_str() << std::endl;
-	reader.read(i);
-	std::cout << "i = " << i << std::endl;
-	reader.read(f);
-	std::cout << "f = " << f << std::endl;
-	*/
-	/*
-	std::list<int> list;
-	list.push_back(10);
-	list.push_back(20);
-	list.push_back(30);
-	list.push_back(40);
-	creator.write(list, 0);
-	*/
 	std::cin.get();
 
 	return 0;
