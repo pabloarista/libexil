@@ -1,0 +1,1 @@
+Exil is a simple TinyXML based object serialization system. All an object needs to do is inherit from the XmlSerializable interface and implement two functions for serializing/deserializing data.
